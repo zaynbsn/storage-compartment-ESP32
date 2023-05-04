@@ -1,26 +1,37 @@
 from ble_client_manager import *
 from time import sleep
 from ledManager import LedManager
+from led import *
+from ledState import *
 
 ble = BluetoothManager()
 ble.connect()
 ble.receive()
 
-ledManager = LedManager()
+led = Led([23,22,21])
+ledManager = LedManager([led])
 
 while True:
   try:
       if ble.is_connected(): 
         ble.send("test")
+
+      led.updateState(FullState())
+      led.turnOnLed()
+      sleep(1)
+
+      led.updateState(EmptyState())
+      led.turnOnLed()
+      sleep(1)
+
+      led.updateState(WrongItemState())
+      led.turnOnLed()
+      sleep(1)
       
-      ledManager.displayRed()
-      sleep(1)
-      ledManager.displayGreen()
-      sleep(1)
-      ledManager.displayBlue()
+      ledManager.turnOffLeds()
       sleep(1)
 
   except KeyboardInterrupt:
-      ledManager.deinit_pwm_pins()
+      led.deinit_pwm_pins()
       raise
 

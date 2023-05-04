@@ -1,0 +1,48 @@
+from machine import Pin, SoftI2C, PWM
+from ledState import *
+
+class Led:
+    def __init__(self, pins=[23,22,21]):
+        self.pwm_pins = pins
+        self.RED = 0
+        self.GREEN = 1
+        self.BLUE = 2
+        self.pwms = []
+
+        self.setup()
+
+        self.readerName = 'default'
+        self.badgeId = 1
+
+        self.currentState = InitialState()
+        self.currentState.context = self
+      
+    def setup(self):
+        self.pwms = [
+                      PWM(Pin(self.pwm_pins[self.RED])),
+                      PWM(Pin(self.pwm_pins[self.GREEN])),
+                      PWM(Pin(self.pwm_pins[self.BLUE]))
+                    ]
+
+        [pwm.freq(60) for pwm in self.pwms]
+
+    def updateState(self, newState):
+        if str(self.currentState) != str(newState):
+          self.currentState = newState
+          self.currentState.context = self
+          print("New State: ", self.currentState)
+
+    def checkState(self):
+        pass
+
+    def turnOnLed(self):
+        self.currentState.turnOnLed()
+    
+    def turnOffLed(self):
+        self.updateState(InitialState())
+        self.turnOnLed()
+
+    def deinit_pwm_pins(self):
+        self.pwms[self.RED].deinit()
+        self.pwms[self.GREEN].deinit()
+        self.pwms[self.BLUE].deinit()
