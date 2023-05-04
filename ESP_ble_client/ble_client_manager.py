@@ -7,7 +7,7 @@ class BluetoothManager():
   def __init__(self):
     self.ble = bluetooth.BLE()
     self.central = BLESimpleCentral(self.ble)
-    self.not_found = False
+    self.not_found = True
 
   def _on_scan(self, addr_type, addr, name):
     if addr_type is not None:
@@ -23,12 +23,19 @@ class BluetoothManager():
   def connect(self):
     self._scan()
     # Wait for connection...
+    count = 0
     while not self.central.is_connected():
-      sleep(1)
       if self.not_found:
-        break
-
-    print("Connected")
+        count+=1
+        print("Fail to connect")
+        if count >= 3:
+          print("aborting connection.")
+          break
+        else:
+          print("retrying in 3 sec...")
+        sleep(3)
+      else:
+        print("Connected")
 
   def _on_rx(self, v):
     print("RX", bytes(v))
