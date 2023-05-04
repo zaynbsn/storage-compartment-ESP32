@@ -1,15 +1,15 @@
 from ble_client_manager import *
 from time import sleep
-from ledManager import LedManager
+from ledsManager import LedsManager
 from led import *
-from ledState import *
+from ledStates import *
 
 ble = BluetoothManager()
 ble.connect()
 ble.receive()
 
 led = Led([23,22,21])
-ledManager = LedManager([led])
+ledsManager = LedsManager([led])
 
 while True:
   try:
@@ -28,7 +28,7 @@ while True:
       led.turnOnLed()
       sleep(1)
       
-      ledManager.turnOffLeds()
+      ledsManager.turnOffLeds()
       sleep(1)
 
   except KeyboardInterrupt:

@@ -1,6 +1,6 @@
 from led import *
 
-class LedManager:
+class LedsManager:
     def __init__(self, leds):
         self.leds = leds
 

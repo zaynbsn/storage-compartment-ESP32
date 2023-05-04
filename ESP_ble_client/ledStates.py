@@ -1,4 +1,4 @@
-class LedStateProtocol:
+class LedStatesProtocol:
     def __init__(self) -> None:
         pass
 
@@ -8,7 +8,7 @@ class LedStateProtocol:
     def turnOnLed(self):
         pass
     
-class InitialState(LedStateProtocol):
+class InitialState(LedStatesProtocol):
     def __init__(self) -> None:
         pass
 
@@ -20,7 +20,7 @@ class InitialState(LedStateProtocol):
         self.context.pwms[self.context.GREEN].duty(0)
         self.context.pwms[self.context.BLUE].duty(0)
     
-class FullState(LedStateProtocol):
+class FullState(LedStatesProtocol):
     def __init__(self) -> None:
         pass
 
@@ -32,7 +32,7 @@ class FullState(LedStateProtocol):
         self.context.pwms[self.context.GREEN].duty(255)
         self.context.pwms[self.context.BLUE].duty(0)
     
-class EmptyState(LedStateProtocol):
+class EmptyState(LedStatesProtocol):
     def __init__(self) -> None:
         pass
 
@@ -44,7 +44,7 @@ class EmptyState(LedStateProtocol):
         self.context.pwms[self.context.GREEN].duty(0)
         self.context.pwms[self.context.BLUE].duty(0)
     
-class WrongItemState(LedStateProtocol):
+class WrongItemState(LedStatesProtocol):
     def __init__(self) -> None:
         pass
 

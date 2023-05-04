@@ -1,5 +1,5 @@
 from machine import Pin, SoftI2C, PWM
-from ledState import *
+from ledStates import *
 
 class Led:
     def __init__(self, pins=[23,22,21]):
