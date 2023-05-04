@@ -24,17 +24,14 @@ class BluetoothManager():
   def connect(self):
     self._scan()
     # Wait for connection...
-    print('self.not_found', self.not_found)
+    print("Scanning and connecting...")
     if self.not_found:
-      print(self.central.is_connected(), 'self.central.is_connected()')
       while not self.central.is_connected():
         print("Fail to connect")
         break
     
-    print("Connected")
-    
   def is_connected(self):
-      return True
+      return self.central.is_connected()
       
   def disconnect(self):
     print("Disconnected")
@@ -46,7 +43,6 @@ class BluetoothManager():
     self.central.on_notify(self._on_rx)
 
   def send(self, v):
-    print('in send', self.central.is_connected())
     with_response = False
     if self.central.is_connected():
       print("TX", v)
