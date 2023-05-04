@@ -1,6 +1,10 @@
-from bluetooth_manager import *
+from ble_client_manager import *
+from time import sleep
 
-# remplacer central par inbstance BTManager
 ble = BluetoothManager()
 ble.connect()
 ble.receive()
+
+while True:
+  ble.send("test")
+  sleep(1)
