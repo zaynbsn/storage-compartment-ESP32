@@ -1,5 +1,6 @@
 from machine import Pin, SoftI2C, PWM
 from ledStates import *
+from time import sleep
 
 class Led:
     def __init__(self, pins=[23,22,21]):
@@ -42,6 +43,17 @@ class Led:
         self.pwms[self.RED].duty(0)
         self.pwms[self.GREEN].duty(0)
         self.pwms[self.BLUE].duty(0)
+
+    def testLed(self, nbRepeat):
+        count = 0
+        while True:
+            Led.turnOnLed()
+            sleep(1)
+            Led.turnOffLed()
+            sleep(1)
+            count += 1
+            if count >= nbRepeat:
+                break
 
     def deinit_pwm_pins(self):
         self.pwms[self.RED].deinit()

@@ -3,14 +3,14 @@ from time import sleep
 from ledsManager import LedsManager
 from led import *
 from ledStates import *
-from tests.checkList import checkInitialState
+from tests.checkList import CheckInitialState
 
 led = Led([23,22,21])
 leds = [led]
 ledsManager = LedsManager(leds)
 ledsManager.turnOffLeds()
 
-checkInitialState(leds=leds)
+CheckInitialState().runAllTests(leds=leds)
 
 ble = BluetoothManager()
 # ble.connect()

@@ -1,14 +1,26 @@
 from time import sleep
-from tests.ledTest import testLed, testUpdateStates
+from tests.ledTests import LedTests
 
-def checkInitialState(leds):
-    print('Bonjour, les tests vont commencer.')
-    sleep(1)
+
+class CheckInitialState():
+
+  def __init__(self):
+    self.ledTests = LedTests()
+    
+  def runAllTests(self, leds):
+      print('Bonjour, les tests vont commencer.')
+      sleep(1)
+      self._runLedTests(leds)
+      sleep(1)
+      #rfid tests
+      sleep(1)
+
+  def _runLedTests(self, leds):
     print('Verification des leds')
     for led in leds:
-        testLed(led)
-        testUpdateStates(led)
+        self.ledTests.runLedTests(led)
     print('Leds OK')
-    sleep(1)
-    #rfid check
-    sleep(1)
+
+  def _runRfidTests(self, rfids):
+    print('Verification des rfids')
+    #testing rfids
