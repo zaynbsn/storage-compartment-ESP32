@@ -44,6 +44,8 @@ class BluetoothManager():
       if not self.central.is_connected():
         print("Fail to connect")
         self.updateState(BLENotConnectedState())
+    self.receive()
+    self.checkAcknowledge()
 
   def is_connected(self):
       return self.central.is_connected()
@@ -56,8 +58,10 @@ class BluetoothManager():
   def _on_rx(self, v):
     print("RX", bytes(v))
     if type(self.state) ==  BLEWaitingForACKState:
-      if bytes(v) == 'ACK':
-        self.updateState(BLEAckSuccessState)
+      if bytes(v).decode() == 'ACK':
+        self.updateState(BLEAckSuccessState())
+      else:
+        self.updateState(BLEAckFailedState())
 
   def receive(self):
     self.central.on_notify(self._on_rx)
@@ -70,6 +74,22 @@ class BluetoothManager():
       sleep(1 if with_response else 0)
 
   def checkAcknowledge(self):
-    if self.is_connected():
-      self.updateState(BLEWaitingForACKState())
-      self.send('ACK')
+    while not self.is_connected():
+      print('waiting connexion')
+      sleep(1)
+    self.send('ACK')
+    self.updateState(BLEWaitingForACKState())
+
+  def checkBLE(self):
+    if not self.is_connected():
+      self.connect()
+      sleep(1)
+    if type(self.state) == BLEConnectedState:
+      self.checkAcknowledge()
+      sleep(1)
+      if type(self.state) == BLEAckSuccessState:
+        self.updateState(BLEIsReadyState())
+      else:
+        self.updateState(BLEAckFailedState())
+    else:
+      self.updateState(BLENotConnectedState())

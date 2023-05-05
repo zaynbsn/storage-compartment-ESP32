@@ -1,6 +1,7 @@
 class LedsManager:
     def __init__(self, leds):
         self.leds = leds
+        self.turnOffLeds()
 
     def turnOnLeds(self):
         for led in self.leds:

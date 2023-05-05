@@ -27,7 +27,7 @@ class BLEWaitingForACKState:
     def description(self):
         return "Ack waiting"
 
-class BLEISReadyState:
+class BLEIsReadyState:
 
     def description(self):
         return "BLE is ready"
