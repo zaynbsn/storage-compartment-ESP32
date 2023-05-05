@@ -19,14 +19,15 @@ class BluetoothManager():
     self.state = newState
     # ALERT si besoin
     if type(newState) in BluetoothManager.stateEmitingAlert:
-      self.alertDelegate.newAlertState(self)
+      self.alertDelegate.newAlertState(self.state)
 
   def _on_scan(self, addr_type, addr, name):
     if addr_type is not None:
       print("Found peripheral:", addr_type, addr, name)
-      self.central.connect()
-      self.updateState(BLEConnectedState())
-      print('Connected')
+      if name == "homee":
+          self.central.connect()
+          self.updateState(BLEConnectedState())
+          print('Connected')
     else:
       self.not_found = True
       print("No peripheral found.")

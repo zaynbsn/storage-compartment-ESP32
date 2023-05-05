@@ -13,33 +13,23 @@ mpu = accel(i2c)
 from wireless_manager import *
 
 class BLECallback(CommunicationCallback):
-    def __init__(self, bleName='default'):
+    def __init__(self, bleName='homee'):
+        self.wirelessManager = None
         self.bleName = bleName
 
-class WebsocketCallback(CommunicationCallback):
-    def __init__(self):
-        self.decodedValue = None
-
-    def connectionCallback(self):
-        print("connected")
-    
-    def disconnectionCallback(self):
-        print("disconnected")
-    
     def didReceiveCallback(self, value):
-        global StrManagager, testArray
-        print("received: " + value)        
-        testArray = strManager.decode(value)
-        print(testArray)
+        print("received: " + value)
+        if value == 'ACK':
+            self.wirelessManager.sendDataToBLE('ACK')
 
-wirelessManager = WirelessManager(bleCallback=BLECallback(), wsCallback=WebsocketCallback())
+wirelessManager = WirelessManager(bleCallback=BLECallback())
 
 def shaking():
-   values = mpu.get_acc_values()
-   sumOfValues = 0
-   for i in range(0,len(values)):
-       sumOfValues += fabs(values[i])
-   return sumOfValues >= 31000
+    values = mpu.get_acc_values()
+    sumOfValues = 0
+    for i in range(0,len(values)):
+        sumOfValues += fabs(values[i])
+    return sumOfValues >= 31000
 
 def zoning(x,y,z, xTarget,yTarget,zTarget, tolerance = 2000):
     minX = xTarget - tolerance

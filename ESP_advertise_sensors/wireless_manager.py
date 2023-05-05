@@ -11,11 +11,11 @@ class CommunicationCallback:
     def didReceiveCallback(self, value):
         print("received: " + value)
 
-
 class WirelessManager:
     
     def __init__(self, bleCallback = None, wsCallback = None):
         self.bleCallback = bleCallback
+        self.bleCallback.wirelessManager = self
         self.wsCallback = wsCallback
         
         if self.bleCallback != None:
