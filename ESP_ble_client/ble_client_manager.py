@@ -5,7 +5,7 @@ import bluetooth
 
 class BluetoothManager():
   
-  stateEmitingAlert = [BLENotConnectedState(), BLEAckFailedState()]
+  stateEmitingAlert = [BLENotConnectedState, BLEAckFailedState]
 
   def __init__(self, alertDelegate):
     self.ble = bluetooth.BLE()
@@ -18,7 +18,7 @@ class BluetoothManager():
   def updateState(self, newState):
     self.state = newState
     # ALERT si besoin
-    if str(newState) in str(BluetoothManager.stateEmitingAlert):
+    if type(newState) in BluetoothManager.stateEmitingAlert:
       self.alertDelegate.newAlertState(self)
 
   def _on_scan(self, addr_type, addr, name):
@@ -54,7 +54,7 @@ class BluetoothManager():
 
   def _on_rx(self, v):
     print("RX", bytes(v))
-    if str(self.state) ==  str(BLEWaitingForACKState()):
+    if type(self.state) ==  BLEWaitingForACKState:
       if bytes(v) == 'ACK':
         self.updateState(BLEAckSuccessState)
 
