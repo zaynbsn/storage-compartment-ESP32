@@ -10,11 +10,6 @@ class LedsManager:
         for led in self.leds:
             led.turnOffLed()
 
-    def testLeds(self, nbRepeat=2):
-        print("Testing leds")
-        for led in self.leds:
-            led.testLed(nbRepeat)
-
     def deinitAllPins(self):
         for led in self.leds:
             led.deinit_pwm_pins()

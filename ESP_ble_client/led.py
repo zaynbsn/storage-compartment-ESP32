@@ -44,17 +44,6 @@ class Led:
         self.pwms[self.GREEN].duty(0)
         self.pwms[self.BLUE].duty(0)
 
-    def testLed(self, nbRepeat):
-        count = 0
-        while True:
-            Led.turnOnLed()
-            sleep(1)
-            Led.turnOffLed()
-            sleep(1)
-            count += 1
-            if count >= nbRepeat:
-                break
-
     def deinit_pwm_pins(self):
         self.pwms[self.RED].deinit()
         self.pwms[self.GREEN].deinit()
