@@ -22,6 +22,5 @@ while True:
         ble.send("test")
 
   except KeyboardInterrupt:
-      led.deinit_pwm_pins()
+      ledsManager.deinitAllPins()
       raise
-

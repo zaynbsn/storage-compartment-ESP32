@@ -14,3 +14,7 @@ class LedsManager:
         print("Testing leds")
         for led in self.leds:
             led.testLed(nbRepeat)
+
+    def deinitAllPins(self):
+        for led in self.leds:
+            led.deinit_pwm_pins()
