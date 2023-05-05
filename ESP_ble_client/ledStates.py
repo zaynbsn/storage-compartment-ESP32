@@ -16,9 +16,9 @@ class InitialState(LedStatesProtocol):
         return "InitialState"
     
     def turnOnLed(self):
-        self.context.pwms[self.context.RED].duty(0)
-        self.context.pwms[self.context.GREEN].duty(0)
-        self.context.pwms[self.context.BLUE].duty(0)
+        self.context.pwms[self.context.RED].duty(255)
+        self.context.pwms[self.context.GREEN].duty(255)
+        self.context.pwms[self.context.BLUE].duty(255)
     
 class FullState(LedStatesProtocol):
     def __init__(self) -> None:

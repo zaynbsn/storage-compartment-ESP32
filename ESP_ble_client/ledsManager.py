@@ -1,5 +1,3 @@
-from led import *
-
 class LedsManager:
     def __init__(self, leds):
         self.leds = leds

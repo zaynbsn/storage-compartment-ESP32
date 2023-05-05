@@ -16,21 +16,21 @@ class Led:
 
         self.currentState = InitialState()
         self.currentState.context = self
-      
+
     def setup(self):
         self.pwms = [
-                      PWM(Pin(self.pwm_pins[self.RED])),
-                      PWM(Pin(self.pwm_pins[self.GREEN])),
-                      PWM(Pin(self.pwm_pins[self.BLUE]))
+                        PWM(Pin(self.pwm_pins[self.RED])),
+                        PWM(Pin(self.pwm_pins[self.GREEN])),
+                        PWM(Pin(self.pwm_pins[self.BLUE]))
                     ]
 
         [pwm.freq(60) for pwm in self.pwms]
 
     def updateState(self, newState):
         if str(self.currentState) != str(newState):
-          self.currentState = newState
-          self.currentState.context = self
-          print("New State: ", self.currentState)
+            self.currentState = newState
+            self.currentState.context = self
+            print("New State: ", self.currentState)
 
     def checkState(self):
         pass
@@ -39,8 +39,9 @@ class Led:
         self.currentState.turnOnLed()
     
     def turnOffLed(self):
-        self.updateState(InitialState())
-        self.turnOnLed()
+        self.pwms[self.RED].duty(0)
+        self.pwms[self.GREEN].duty(0)
+        self.pwms[self.BLUE].duty(0)
 
     def deinit_pwm_pins(self):
         self.pwms[self.RED].deinit()
