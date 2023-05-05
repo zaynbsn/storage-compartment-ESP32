@@ -1,4 +1,3 @@
-from sensorManager import *
 from time import sleep
 from ble_simple_central import *
 import bluetooth

@@ -1,8 +1,6 @@
-from ble_client_manager import *
-from time import sleep
+from ble_client_manager import BluetoothManager
 from ledsManager import LedsManager
 from led import *
-from ledStates import *
 from tests.checkList import CheckInitialState
 
 led = Led([23,22,21])
