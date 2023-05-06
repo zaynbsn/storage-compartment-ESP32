@@ -27,6 +27,7 @@ while True:
       if type(homeeSystem.state) == SystemOKState:
         if ble.is_connected():
           ledsManager.turnOnLeds()
+          homeeSystem.checkSystemState(ble)
 
         else:
           # sensorManager.estimateDistance()
@@ -34,8 +35,8 @@ while True:
           print(sensor.distance_cm())
           if 0 < sensor.distance_cm() <= 30:
             ble.connect()
+          homeeSystem.checkSystemState()
             
-        #homeeSystem.checkSystemState(ble)
         sleep(1)
       else:
         break

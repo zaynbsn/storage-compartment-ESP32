@@ -9,12 +9,12 @@ class HomeeSystem:
     def updateState(self, newState):
         self.state = newState
     
-    def checkSystemState(self, ble):
+    def checkSystemState(self, ble=None):
         print("checking system state")
         ### check everything ###
-        ble.checkBLE()
-        sleep(3)
-        if type(ble.state) == BLEIsReadyState:
-            self.updateState(SystemOKState())
-        else:
-            self.updateState(SystemNotOKState())
+        self.updateState(SystemOKState())
+
+        if ble:
+          bleState = ble.getState()
+          if type(bleState) != BLEIsReadyState:
+              self.updateState(SystemNotOKState())
