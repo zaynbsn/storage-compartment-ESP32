@@ -1,5 +1,5 @@
 from time import sleep
-from ledStates import *
+from leds.ledStates import *
 
 
 class LedTests:

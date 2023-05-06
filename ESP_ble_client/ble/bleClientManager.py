@@ -1,6 +1,6 @@
 from time import sleep
-from ble_simple_central import *
-from bleStates import *
+from ble.bleSimpleCentral import *
+from ble.bleStates import *
 import bluetooth
 
 class BluetoothManager():
@@ -73,10 +73,17 @@ class BluetoothManager():
       self.central.write(v, self.with_response)
       sleep(1 if with_response else 0)
 
-  def checkAcknowledge(self):
+  def checkAcknowledge(self, nbTry=3):
+    count = 0
     while not self.is_connected():
+      if count >= nbTry:
+        print('no connexion to check ack')
+        self.updateState(BLENotConnectedState())
+        return
       print('waiting connexion')
+      count += 1
       sleep(1)
+
     self.send('ACK')
     self.updateState(BLEWaitingForACKState())
 

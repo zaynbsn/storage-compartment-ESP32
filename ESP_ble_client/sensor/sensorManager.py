@@ -1,4 +1,4 @@
-from sensorStates import *
+from sensor.sensorStates import *
 
 class SensorManager:
   def __init__(self, sensor):
@@ -25,4 +25,4 @@ class SensorManager:
   def estimateDistance(self):
     print("Current State: ", self.currentState)
     print("distance: ",  self.sensor.distance_cm())
-    self.__stateChecking()  
+    self.__stateChecking()

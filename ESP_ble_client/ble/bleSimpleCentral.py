@@ -7,7 +7,7 @@ import struct
 import time
 import micropython
 
-from ble_advertising import decode_services, decode_name
+from ble.bleAdvertising import decode_services, decode_name
 
 from micropython import const
 

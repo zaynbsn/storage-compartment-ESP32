@@ -1,5 +1,5 @@
 from machine import Pin, SoftI2C, PWM
-from ledStates import *
+from leds.ledStates import *
 from time import sleep
 
 class Led:

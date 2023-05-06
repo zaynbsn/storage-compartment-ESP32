@@ -2,10 +2,7 @@ from machine import Pin, SoftI2C, sleep
 from time import sleep_ms
 from accelerometer import accel
 from math import fabs
-from hcsr04 import *
 from time import sleep
-
-sensor = HCSR04(trigger_pin=5, echo_pin=18, echo_timeout_us=10000)
 
 i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 mpu = accel(i2c)
@@ -48,27 +45,14 @@ cooldown = 0
 
 while True:
     wirelessManager.process()
-    if not isDoorOpen:
-        distance = sensor.distance_cm()   
+    if not isDoorOpen:  
         # print('Distance:', distance, 'cm')
         if shaking():
             print("la porte s'ouvre", distance, "cm")
             if wirelessManager.isConnected():
-                if distance <= 40 and distance > 0:
-                    wirelessManager.sendDataToWS("shaking out (someone detected)")
-                    
-                elif distance > 40 or distance < 0:
-                    wirelessManager.sendDataToWS("shaking in (nothing detected)")
-                    
-            if distance <= 40 and distance > 0:
-                wirelessManager.sendDataToBLE("shaking out (someone detected)")
-                    
-            elif distance > 40 or distance < 0:
-                wirelessManager.sendDataToBLE("shaking in (nothing detected)")
-                
+                    wirelessManager.sendDataToWS("shaking")
             isDoorOpen = True
         else:
-            #print('no')
             pass
     else:
         cooldown+=1

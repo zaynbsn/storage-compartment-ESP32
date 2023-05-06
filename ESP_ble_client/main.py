@@ -1,13 +1,13 @@
-from ble_client_manager import BluetoothManager
-from ledsManager import LedsManager
-from led import *
+from ble.bleClientManager import BluetoothManager
+from leds.ledsManager import LedsManager
+from leds.led import *
 from tests.checkList import CheckInitialState
 from systemStates import *
 from homeeSystem import HomeeSystem
 from alertDelegate import *
-from hcsr04 import *
-from sensorManager import SensorManager
-from sensorStates import *
+from libs.hcsr04 import *
+from sensor.sensorManager import SensorManager
+from sensor.sensorStates import *
 
 sensor = HCSR04(trigger_pin=14, echo_pin=12, echo_timeout_us=10000)
 sensorManager = SensorManager(sensor)
