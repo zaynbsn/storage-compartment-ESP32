@@ -49,7 +49,6 @@ class BluetoothManager():
         self.updateState(BLENotConnectedState())
     self.receive()
     sleep(1)
-    print("sleeping")
     self.checkAcknowledge()
 
   def is_connected(self):

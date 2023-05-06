@@ -10,7 +10,7 @@ from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
 
 sensor = HCSR04(trigger_pin=14, echo_pin=12, echo_timeout_us=10000)
-sensorManager = SensorManager(sensor)
+sensorManager = SensorManager(sensor, SensorAlertManager())
 
 led = Led([23,22,21])
 leds = [led]
@@ -27,15 +27,15 @@ while True:
       if type(homeeSystem.state) == SystemOKState:
         if ble.is_connected():
           ledsManager.turnOnLeds()
-          homeeSystem.checkSystemState(ble)
+          homeeSystem.checkSystemState(ble=ble)
 
         else:
-          # sensorManager.estimateDistance()
-          # if type(sensorManager.currentState) == NearState:
-          print(sensor.distance_cm())
-          if 0 < sensor.distance_cm() <= 30:
+          sensorManager.estimateDistance()
+          if type(sensorManager.currentState) == NearState:
+          ##print(sensor.distance_cm())
+          # if 0 < sensor.distance_cm() <= 30:
             ble.connect()
-          homeeSystem.checkSystemState()
+          homeeSystem.checkSystemState(sensor=sensorManager)
             
         sleep(1)
       else:

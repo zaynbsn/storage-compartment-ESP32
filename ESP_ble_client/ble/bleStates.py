@@ -5,7 +5,7 @@ class BLEState:
 class BLENotConnectedState:
 
     def description(self):
-        return "Connexion failed"
+        return "Err - Connexion failed"
 
 class BLEConnectedState:
 
@@ -15,7 +15,7 @@ class BLEConnectedState:
 class BLEAckFailedState:
 
     def description(self):
-        return "Ack failed"
+        return "Err - Ack failed"
 
 class BLEAckSuccessState:
 
