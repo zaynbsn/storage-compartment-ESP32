@@ -1,12 +1,9 @@
 from machine import Pin, SoftI2C, sleep
 from time import sleep_ms
-from accelerometer import accel
-from math import fabs
-from time import sleep
-
-i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
-mpu = accel(i2c)
-
+from exemples.read import *
+from rfidManager import RfidManager
+from nfcBoard import NFCBoard
+from tests.checkList import CheckInitialState
 from wireless_manager import *
 
 class BLECallback(CommunicationCallback):
@@ -21,44 +18,38 @@ class BLECallback(CommunicationCallback):
 
 wirelessManager = WirelessManager(bleCallback=BLECallback())
 
-def shaking():
-    values = mpu.get_acc_values()
-    sumOfValues = 0
-    for i in range(0,len(values)):
-        sumOfValues += fabs(values[i])
-    return sumOfValues >= 31000
+sck = Pin(18, Pin.OUT)
+mosi = Pin(23, Pin.OUT)
+miso = Pin(19, Pin.OUT)
+sda = Pin(5, Pin.OUT)
+sda2 = Pin(17, Pin.OUT)
 
-def zoning(x,y,z, xTarget,yTarget,zTarget, tolerance = 2000):
-    minX = xTarget - tolerance
-    maxX = xTarget + tolerance
-    minY = yTarget - tolerance
-    maxY = yTarget + tolerance
-    minZ = zTarget - tolerance
-    maxZ = zTarget + tolerance
-    if minX <= x <= maxX and minY <= y <= maxY and minZ <= z <= maxZ:
-        return True
-    else:
-        return False
 
-isDoorOpen = False
-cooldown = 0
+board1 = NFCBoard(rid='board1', sda=sda, sck=sck, mosi=mosi, miso=miso)
+board2 = NFCBoard(rid='board2', sda=sda2, sck=sck, mosi=mosi, miso=miso)
+#boards = { 'board1': board1 }
+boards = { 'board1': board1, 'board2': board2 }
 
-while True:
-    wirelessManager.process()
-    if not isDoorOpen:  
-        # print('Distance:', distance, 'cm')
-        if shaking():
-            print("la porte s'ouvre", distance, "cm")
-            if wirelessManager.isConnected():
-                    wirelessManager.sendDataToWS("shaking")
-            isDoorOpen = True
-        else:
-            pass
-    else:
-        cooldown+=1
-        #print(cooldown)
-    
-    if cooldown >= 20:
-        isDoorOpen = False
-        cooldown = 0
-    sleep_ms(200)
+rfidManager = RfidManager(boards)
+CheckInitialState().runAllTests(rfids=boards)
+
+try: 
+    while True: 
+        #rfidManager.readboard('board1')
+        #rfidManager.readboard('board2')
+        rfidManager.readAllBoards()
+
+        sleep_ms(200)
+
+except KeyboardInterrupt:
+    print('Bye')
+
+# while True:
+#     wirelessManager.process()
+#     # if wirelessManager.isConnected():
+#     #     #wirelessManager.sendDataToWS("shaking")
+#     #     pass
+#     # else:
+#     #     pass
+
+#     sleep_ms(200)
