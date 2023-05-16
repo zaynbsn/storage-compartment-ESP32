@@ -23,15 +23,15 @@ class LedTests:
                 break
 
     def testUpdateStates(self, led):
-        led.updateState(FullState())
+        led.updateState(GreenState())
         led.turnOnLed()
         sleep(1)
 
-        led.updateState(EmptyState())
+        led.updateState(RedState())
         led.turnOnLed()
         sleep(1)
 
-        led.updateState(WrongItemState())
+        led.updateState(BlueState())
         led.turnOnLed()
         sleep(1)
 

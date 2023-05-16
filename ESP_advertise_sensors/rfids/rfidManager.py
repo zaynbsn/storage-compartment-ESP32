@@ -6,7 +6,7 @@ class RfidManager:
     def __init__(self, boards):
         """
         @param: 
-        boards est un dictionnaire { boardId: NFCBoard(), boardId: NFCBoard() ... }
+        boards est un dictionnaire { boardId: Rfid(), boardId: Rfid() ... }
         """
         self.boards = boards
 
@@ -19,7 +19,7 @@ class RfidManager:
     def selectboard(self, rid):
         if not rid in self.boards:
             return False
-      
+
         return True
     
     def readAllBoards(self):

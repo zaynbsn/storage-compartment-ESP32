@@ -28,7 +28,7 @@ class Led:
         [pwm.freq(60) for pwm in self.pwms]
 
     def updateState(self, newState):
-        if str(self.currentState) != str(newState):
+        if type(self.currentState) != newState:
             self.currentState = newState
             self.currentState.context = self
             print("New State: ", self.currentState)
