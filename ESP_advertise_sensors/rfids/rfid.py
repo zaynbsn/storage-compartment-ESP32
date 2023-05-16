@@ -13,7 +13,7 @@ class Rfid:
         self.currentState.context = self
 
     def updateState(self, newState):
-        if type(self.currentState) != newState:
+        if type(self.currentState) != type(newState):
             self.currentState = newState
             self.currentState.context = self
             print("New State: ", self.currentState)
@@ -30,8 +30,10 @@ class Rfid:
                 sleep_ms(100)
                 self.badgeId = uid 
                 self.updateState(ReadState())
-        self.badgeId = None
-        self.updateState(NoReadState())
+        else:
+            self.badgeId = None
+            print(self.rid, uid)
+            self.updateState(NoReadState())
 
 
     def readTest(self):

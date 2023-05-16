@@ -16,44 +16,27 @@ class BLECallback(CommunicationCallback):
         self.bleName = bleName
 
     def didReceiveCallback(self, value):
-        print("received: " + value)
-        if value == 'ACK':
+        print("received: " + bytes(value).decode())
+        if bytes(value).decode() == 'ACK':
             self.wirelessManager.sendDataToBLE('ACK')
 
-# wirelessManager = WirelessManager(bleCallback=BLECallback())
-
-# sck = Pin(18, Pin.OUT)
-# mosi = Pin(23, Pin.OUT)
-# miso = Pin(19, Pin.OUT)
-# sda = Pin(5, Pin.OUT)
-# sda2 = Pin(17, Pin.OUT)
-
-
-# board1 = Rfid(rid='board1', sda=sda, sck=sck, mosi=mosi, miso=miso)
-# board2 = Rfid(rid='board2', sda=sda2, sck=sck, mosi=mosi, miso=miso)
-# #boards = { 'board1': board1 }
-# boards = { 'board1': board1, 'board2': board2 }
-
-# rfidManager = RfidManager(boards)
-
-# slot1 = Slot(rfid=board1, badgeId='0x', led=None)s
-# slot2 = Slot(rfid=board2, badgeId='0x', led=None)
-# slotManager = SlotManager( { 'slot1': slot1, 'slot2': slot2 } )
 
 homee = Homee.defaultConfig(BLECallback)
 
-CheckInitialState().runAllTests(rfids=homee.rfidManager.boards)
+#CheckInitialState().runAllTests(rfids=homee.rfidManager.boards)
 
 try: 
     while True: 
         #rfidManager.readboard('board1')
         #rfidManager.readboard('board2')
         # rfidManager.readAllBoards()
-        if homee.wirelessManager.isConnected():
-            homee.run()
-
-        sleep_ms(200)
+        #if homee.wirelessManager.isConnected():
+        # homee.run()
+        # print(homee.slotManager.slots)
+        # print(homee.rfidManager.boards)
+        homee.run()
+        sleep_ms(500)
 
 except KeyboardInterrupt:
-    homee.stop()
+    # homee.stop()
     print('Bye')

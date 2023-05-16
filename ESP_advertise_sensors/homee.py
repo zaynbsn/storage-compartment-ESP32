@@ -30,9 +30,9 @@ class Homee:
     def run(self):
         self.readAllBoards()
         self.updateSlotState()
-        self.updateLedState()
+        # self.updateLedState()
         # send ble
-        self.turnOnLeds()
+        # self.turnOnLeds()
 
     def stop(self):
         self.turnOffLed()
@@ -51,8 +51,8 @@ class Homee:
         board2 = Rfid(rid='board2', sda=sda2, sck=sck, mosi=mosi, miso=miso)
         rfidManager = RfidManager( { 'board1': board1, 'board2': board2 } )
 
-        slot1 = Slot(rfid=board1, badgeId='0x', led=None)
-        slot2 = Slot(rfid=board2, badgeId='0x', led=None)
+        slot1 = Slot(rfid=board1, badgeId='0x3c2356f8', led=None)
+        slot2 = Slot(rfid=board2, badgeId='0x5a5512b1', led=None)
         slotManager = SlotManager( { 'slot1': slot1, 'slot2': slot2 } )
 
         return Homee(slotManager=slotManager, rfidManager=rfidManager, ledManager=None, wirelessManager=wirelessManager)
