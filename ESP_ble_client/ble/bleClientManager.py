@@ -7,13 +7,15 @@ class BluetoothManager():
   
   stateEmitingAlert = [BLENotConnectedState, BLEAckFailedState]
 
-  def __init__(self, alertDelegate):
+  def __init__(self, alertDelegate, homee):
     self.ble = bluetooth.BLE()
     self.central = BLESimpleCentral(self.ble)
+    self.homee = homee
     self.not_found = False
     self.with_response = False
     self.alertDelegate = alertDelegate
     self.state = BLENotConnectedState()
+
 
   def getState(self):
     return self.state
@@ -60,13 +62,15 @@ class BluetoothManager():
     print("Disconnected")
 
   def _on_rx(self, v):
-    print("RX", bytes(v))
+    print("RX", bytes(v).decode())
     if type(self.state) ==  BLEWaitingForACKState:
       if bytes(v).decode() == 'ACK':
         self.updateState(BLEAckSuccessState())
         self.updateState(BLEIsReadyState())
       else:
         self.updateState(BLEAckFailedState())
+    else:
+      self.homee.decodeString(bytes(v).decode())
 
   def receive(self):
     self.central.on_notify(self._on_rx)

@@ -17,6 +17,6 @@ class SlotManager:
     def getSlotsStates(self):
         slotsStates = []
         for slot in self.slots:
-            slotsStates.append(str(self.slots[slot].currentState))
+            slotsStates.append(type(self.slots[slot].currentState))
 
         return slotsStates

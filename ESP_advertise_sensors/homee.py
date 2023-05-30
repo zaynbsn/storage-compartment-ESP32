@@ -4,11 +4,13 @@ from neopixel import NeoPixel
 from rfids.rfid import Rfid
 from rfids.rfidManager import RfidManager
 
+from slots.slotStates import *
 from slots.slot import Slot
 from slots.slotManager import SlotManager
 
 from leds.led import Led
 from leds.ledsManager import LedsManager
+
 
 from ble.wireless_manager import *
 
@@ -40,7 +42,16 @@ class Homee:
 
     def getStrToSend(self):
         slotsStates = self.slotManager.getSlotsStates()
-        self.strToSend = slotsStates[0] + "||" + slotsStates[1] + "||" + slotsStates[2]
+        for i in range(len(slotsStates)):
+            if slotsStates[i] == NotHereState:
+                slotsStates[i] = 0
+            elif slotsStates[i] == HereOKState:
+                slotsStates[i] = 1
+            elif slotsStates[i] == HereNOKState:
+                slotsStates[i] = 2
+            else:
+                slotsStates[i] = 3
+        self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
 
     def sendToBle(self):
         self.getStrToSend()
@@ -50,7 +61,7 @@ class Homee:
         self.readAllBoards()
         self.updateSlotState()
         # send ble
-        # self.sendToBle()
+        self.sendToBle()
         self.updateLedState()
         self.getRGBs()
         self.turnOnLeds()
