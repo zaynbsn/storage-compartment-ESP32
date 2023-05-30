@@ -42,5 +42,4 @@ while True:
         break
 
   except KeyboardInterrupt:
-      ledsManager.deinitAllPins()
       raise

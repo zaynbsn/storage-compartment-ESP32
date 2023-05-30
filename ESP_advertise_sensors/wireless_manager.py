@@ -34,11 +34,11 @@ class WirelessManager:
             self.server.start()
             
     def isConnected(self):
-        #if self.bleCallback != None:
-            #self.blePeripheral.is_connected()
-        if self.wsCallback != None:
+        if self.bleCallback != None:
+            return self.blePeripheral.is_connected()
+        # if self.wsCallback != None:
             #print(self.server.isConnected)
-            return self.server.isConnected
+            # return self.server.isConnected
 
     def sendDataToBLE(self, data):
         if self.bleCallback != None:

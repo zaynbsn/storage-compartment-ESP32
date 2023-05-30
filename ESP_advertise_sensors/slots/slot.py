@@ -14,7 +14,7 @@ class Slot:
         if type(self.currentState) != type(newState):
             self.currentState = newState
             self.currentState.context = self
-            print("New State: ", self.currentState)
+            print("New Slot State: ", self.currentState)
 
     def checkState(self):
         if type(self.rfid.currentState) == NoReadState:

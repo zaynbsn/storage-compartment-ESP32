@@ -9,24 +9,12 @@ from wireless_manager import *
 from tests.checkList import CheckInitialState
 from homee import Homee
 
-
-class BLECallback(CommunicationCallback):
-    def __init__(self, bleName='homee'):
-        self.wirelessManager = None
-        self.bleName = bleName
-
-    def didReceiveCallback(self, value):
-        print("received: " + bytes(value).decode())
-        if bytes(value).decode() == 'ACK':
-            self.wirelessManager.sendDataToBLE('ACK')
-
-
-homee = Homee.defaultConfig(BLECallback)
+homee = Homee.defaultConfig()
 
 #CheckInitialState().runAllTests(rfids=homee.rfidManager.boards)
 
 try: 
-    while True: 
+    while True:
         #rfidManager.readboard('board1')
         #rfidManager.readboard('board2')
         # rfidManager.readAllBoards()

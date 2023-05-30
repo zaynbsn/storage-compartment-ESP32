@@ -9,3 +9,7 @@ class SlotManager:
     def updateLedsStates(self):
         for slot in self.slots:
             self.slots[slot].updateLedState()
+
+    def turnOnLeds(self):
+        for slot in self.slots:
+            self.slots[slot].turnOnLeds()
