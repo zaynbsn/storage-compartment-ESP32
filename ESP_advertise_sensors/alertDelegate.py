@@ -2,7 +2,6 @@ class AlertDelegate:
 
     def newAlertState(self,bleObj):
         pass
-        
 
 class BLEAlertManager(AlertDelegate):
     

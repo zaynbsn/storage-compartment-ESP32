@@ -10,7 +10,7 @@ from slots.slotManager import SlotManager
 from leds.led import Led
 from leds.ledsManager import LedsManager
 
-from wireless_manager import *
+from ble.wireless_manager import *
 
 class Homee:
     def __init__(self, slotManager, rfidManager, ledManager, wirelessManager):
