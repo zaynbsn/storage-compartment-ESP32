@@ -28,22 +28,22 @@ class Homee:
     def updateLedState(self):
         self.slotManager.updateLedsStates()
 
+    def getRGBs(self):
+        self.ledManager.getRGBs()
+
     def turnOnLeds(self):
         self.ledManager.turnOnLeds()
 
     def turnOffLed(self):
         self.ledManager.turnOffLeds()
-    
-    def checkLedsStates(self):
-        self.ledManager.checkLedsStates()
 
     def run(self):
         self.readAllBoards()
         self.updateSlotState()
         self.updateLedState()
-        self.checkLedsStates()
+        self.getRGBs()
         # send ble
-        # self.turnOnLeds()
+        self.turnOnLeds()
 
     def stop(self):
         self.turnOffLed()

@@ -20,8 +20,8 @@ class Led:
             self.currentState.context = self
             print("New Led State: ", self.currentState)
 
-    def checkState(self):
-        pass
+    def getRGB(self):
+        return self.currentState.getRGB()
 
     def turnOnLed(self):
         self.currentState.turnOnLed()

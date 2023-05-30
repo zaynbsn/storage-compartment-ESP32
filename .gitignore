@@ -5,3 +5,5 @@ boot.py
 *.zip
 
 client_ble_Base_StateMachine_System.py
+
+unusedFiles

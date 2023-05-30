@@ -15,16 +15,9 @@ homee = Homee.defaultConfig()
 
 try: 
     while True:
-        #rfidManager.readboard('board1')
-        #rfidManager.readboard('board2')
-        # rfidManager.readAllBoards()
-        #if homee.wirelessManager.isConnected():
-        # homee.run()
-        # print(homee.slotManager.slots)
-        # print(homee.rfidManager.boards)
         homee.run()
         sleep_ms(500)
 
 except KeyboardInterrupt:
-    # homee.stop()
+    homee.stop()
     print('Bye')
