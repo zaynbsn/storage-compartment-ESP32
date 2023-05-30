@@ -5,12 +5,6 @@ from time import sleep
 class Led:
     def __init__(self, led):
         self.led = led
-
-        #self.setup()
-
-        self.readerName = 'default'
-        self.badgeId = 1
-
         self.currentState = InitialState()
         self.currentState.context = self
 

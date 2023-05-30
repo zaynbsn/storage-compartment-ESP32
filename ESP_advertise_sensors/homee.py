@@ -18,6 +18,7 @@ class Homee:
         self.rfidManager = rfidManager
         self.ledManager = ledManager
         self.wirelessManager = wirelessManager
+        self.strToSend = ''
 
     def readAllBoards(self):
         self.rfidManager.readAllBoards()
@@ -37,12 +38,21 @@ class Homee:
     def turnOffLed(self):
         self.ledManager.turnOffLeds()
 
+    def getStrToSend(self):
+        slotsStates = self.slotManager.getSlotsStates()
+        self.strToSend = slotsStates[0] + "||" + slotsStates[1] + "||" + slotsStates[2]
+
+    def sendToBle(self):
+        self.getStrToSend()
+        self.wirelessManager.sendDataToBLE(self.strToSend)
+
     def run(self):
         self.readAllBoards()
         self.updateSlotState()
+        # send ble
+        # self.sendToBle()
         self.updateLedState()
         self.getRGBs()
-        # send ble
         self.turnOnLeds()
 
     def stop(self):

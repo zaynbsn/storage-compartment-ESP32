@@ -13,3 +13,10 @@ class SlotManager:
     def turnOnLeds(self):
         for slot in self.slots:
             self.slots[slot].turnOnLeds()
+
+    def getSlotsStates(self):
+        slotsStates = []
+        for slot in self.slots:
+            slotsStates.append(str(self.slots[slot].currentState))
+
+        return slotsStates
