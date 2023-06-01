@@ -76,7 +76,7 @@ class BluetoothManager():
     self.central.on_notify(self._on_rx)
 
   def send(self, v, withResponse=False):
-    with_response = withResponse
+    self.with_response = withResponse
     if self.central.is_connected():
       print("TX", v)
       self.central.write(v, self.with_response)

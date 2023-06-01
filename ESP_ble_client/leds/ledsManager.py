@@ -15,14 +15,14 @@ class LedsManager:
     def changeLedsColors(self):
         self.getRGBs()
 
-        self.ledStrip[1] = self.RGB1
-        self.ledStrip[2] = self.RGB1
+        self.ledStrip[1] = self.RGB3
+        self.ledStrip[2] = self.RGB3
 
         self.ledStrip[5] = self.RGB2
         self.ledStrip[6] = self.RGB2
 
-        self.ledStrip[9] = self.RGB3
-        self.ledStrip[10] = self.RGB3
+        self.ledStrip[9] = self.RGB1
+        self.ledStrip[10] = self.RGB1
 
     def turnOnLeds(self):
         # violet (129, 14, 219)

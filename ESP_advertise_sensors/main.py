@@ -8,8 +8,9 @@ homee = Homee.defaultConfig()
 
 try: 
     while True:
-        homee.run()
-        sleep_ms(500)
+        if homee.wirelessManager.isConnected():
+            homee.run()
+        sleep_ms(250)
 
 except KeyboardInterrupt:
     homee.stop()

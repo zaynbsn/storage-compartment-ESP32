@@ -9,6 +9,7 @@ from libs.hcsr04 import *
 from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
 from neopixel import NeoPixel
+from time import sleep_ms
 
 sensor = HCSR04(trigger_pin=14, echo_pin=12, echo_timeout_us=10000)
 sensorManager = SensorManager(sensor, SensorAlertManager())
@@ -36,7 +37,7 @@ while True:
           if type(sensorManager.currentState) == NearState:
             ble.connect()
           homeeSystem.checkSystemState(sensor=sensorManager)
-        sleep(1)
+        sleep_ms(250)
       else:
         break
 
