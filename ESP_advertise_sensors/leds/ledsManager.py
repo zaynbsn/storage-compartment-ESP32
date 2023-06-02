@@ -9,9 +9,9 @@ class LedsManager:
         for i in range(len(self.leds)):
             self.rgbs[i] = (self.leds[i].getRGB())
 
-        self.changeLedsColors()
-
     def changeLedsColors(self):
+        self.getRGBs()
+
         self.ledStrip[0] = self.rgbs[0]
         self.ledStrip[1] = self.rgbs[0]
         self.ledStrip[2] = self.rgbs[0]
@@ -35,3 +35,7 @@ class LedsManager:
     def turnOffLeds(self):
         self.ledStrip.fill((0, 0, 0))
         self.ledStrip.write()
+    
+    def run(self):
+        self.changeLedsColors()
+        self.turnOnLeds()

@@ -2,27 +2,31 @@ class LedsManager:
     def __init__(self, ledStrip, leds):
         self.ledStrip = ledStrip
         self.leds = leds
-        self.RGB1 = (0,0,0)
-        self.RGB2 = (0,0,0)
-        self.RGB3 = (0,0,0)
+        self.rgbs = [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
         self.turnOffLeds()
 
     def getRGBs(self):
-        self.RGB1 = self.leds[0].getRGB()
-        self.RGB2 = self.leds[1].getRGB()
-        self.RGB3 = self.leds[2].getRGB()
+        for i in range(len(self.leds)):
+            self.rgbs[i] = (self.leds[i].getRGB())
+
 
     def changeLedsColors(self):
         self.getRGBs()
 
-        self.ledStrip[1] = self.RGB3
-        self.ledStrip[2] = self.RGB3
+        self.ledStrip[0] = self.rgbs[2]
+        self.ledStrip[1] = self.rgbs[2]
+        self.ledStrip[2] = self.rgbs[2]
+        # self.ledStrip[3] = self.rgbs[2]
 
-        self.ledStrip[5] = self.RGB2
-        self.ledStrip[6] = self.RGB2
+        self.ledStrip[4] = self.rgbs[1]
+        self.ledStrip[5] = self.rgbs[1]
+        self.ledStrip[6] = self.rgbs[1]
+        self.ledStrip[7] = self.rgbs[1]
 
-        self.ledStrip[9] = self.RGB1
-        self.ledStrip[10] = self.RGB1
+        # self.ledStrip[8] = self.rgbs[0]
+        self.ledStrip[9] = self.rgbs[0]
+        self.ledStrip[10] = self.rgbs[0]
+        self.ledStrip[11] = self.rgbs[0]
 
     def turnOnLeds(self):
         # violet (129, 14, 219)
