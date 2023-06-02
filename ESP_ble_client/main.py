@@ -21,7 +21,8 @@ led3 = Led([9, 10])
 leds = [led1, led2, led3]
 ledManager = LedsManager(ledStrip, leds)
 
-# CheckInitialState().runAllTests(leds=leds)
+CheckInitialState().runAllTests(ledManager=ledManager)
+
 homeeSystem = HomeeSystem(SystemOKState(), ledManager)
 
 ble = BluetoothManager(BLEAlertManager(), homeeSystem)

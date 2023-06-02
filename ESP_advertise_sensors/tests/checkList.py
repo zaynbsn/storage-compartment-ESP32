@@ -9,19 +9,18 @@ class CheckInitialState():
     self.rfidTests = RfidTests()
 
     
-  def runAllTests(self, leds=None, rfids=None):
+  def runAllTests(self, ledManager=None, rfids=None):
       print('Bonjour, les tests vont commencer.')
       # sleep(1)
-      # self._runLedTests(leds)
+      self._runLedTests(ledManager)
       sleep(1)
       self._runRfidTests(rfids)
       sleep(1)
       print("Tests terminés. Lecture des rfid en cours")
 
-  def _runLedTests(self, leds):
+  def _runLedTests(self, ledManager):
     print('Verification des leds')
-    for led in leds:
-        self.ledTests.runLedTests(led)
+    self.ledTests.runLedTests(ledManager)
     print('Leds OK')
 
   def _runRfidTests(self, rfids):

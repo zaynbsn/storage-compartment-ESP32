@@ -1,10 +1,11 @@
 from time import sleep_ms
 from exemples.read import *
 from homee import Homee
+from tests.checkList import *
 
 homee = Homee.defaultConfig()
 
-#CheckInitialState().runAllTests(rfids=homee.rfidManager.boards)
+CheckInitialState().runAllTests(ledManager=homee.ledManager, rfids=homee.rfidManager.boards)
 
 try: 
     while True:

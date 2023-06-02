@@ -7,18 +7,15 @@ class CheckInitialState():
   def __init__(self):
     self.ledTests = LedTests()
     
-  def runAllTests(self, leds):
+  def runAllTests(self, ledManager):
       print('Bonjour, les tests vont commencer.')
       sleep(1)
-      self._runLedTests(leds)
-      sleep(1)
-      #rfid tests
+      self._runLedTests(ledManager)
       sleep(1)
 
-  def _runLedTests(self, leds):
+  def _runLedTests(self, ledManager):
     print('Verification des leds')
-    for led in leds:
-        self.ledTests.runLedTests(led)
+    self.ledTests.runLedTests(ledManager)
     print('Leds OK')
 
   def _runRfidTests(self, rfids):
