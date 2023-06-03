@@ -44,14 +44,19 @@ class Homee:
         slotsStates = self.slotManager.getSlotsStates()
         for i in range(len(slotsStates)):
             if slotsStates[i] == NotHereState:
-                slotsStates[i] = 0
-            elif slotsStates[i] == HereOKState:
                 slotsStates[i] = 1
+            elif slotsStates[i] == HereOKState:
+                slotsStates[i] = 0
             elif slotsStates[i] == HereNOKState:
-                slotsStates[i] = 2
+                slotsStates[i] = 0
             else:
-                slotsStates[i] = 3
-        self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
+                slotsStates[i] = -1
+
+        if slotsStates == [1,1,1]:
+            self.strToSend = 'good'
+        else:
+            self.strToSend = 'bad'
+        # self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
 
     def sendToBle(self):
         self.getStrToSend()

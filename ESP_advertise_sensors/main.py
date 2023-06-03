@@ -5,7 +5,7 @@ from tests.checkList import *
 
 homee = Homee.defaultConfig()
 
-CheckInitialState().runAllTests(ledManager=homee.ledManager, rfids=homee.rfidManager.boards)
+# CheckInitialState().runAllTests(ledManager=homee.ledManager, rfids=homee.rfidManager.boards)
 
 try: 
     while True:

@@ -8,10 +8,10 @@ class CheckInitialState():
     self.ledTests = LedTests()
     
   def runAllTests(self, ledManager):
-      print('Bonjour, les tests vont commencer.')
-      sleep(1)
-      self._runLedTests(ledManager)
-      sleep(1)
+    print('Bonjour, les tests vont commencer.')
+    sleep(1)
+    self._runLedTests(ledManager)
+    sleep(1)
 
   def _runLedTests(self, ledManager):
     print('Verification des leds')

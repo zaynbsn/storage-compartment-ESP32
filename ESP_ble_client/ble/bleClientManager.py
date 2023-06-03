@@ -7,7 +7,7 @@ class BluetoothManager():
   
   stateEmitingAlert = [BLENotConnectedState, BLEAckFailedState]
 
-  def __init__(self, alertDelegate, homee):
+  def __init__(self, alertDelegate, homee=None):
     self.ble = bluetooth.BLE()
     self.central = BLESimpleCentral(self.ble)
     self.homee = homee
@@ -70,7 +70,8 @@ class BluetoothManager():
       else:
         self.updateState(BLEAckFailedState())
     else:
-      self.homee.decodeString(bytes(v).decode())
+      if self.homee:
+        self.homee.decodeString(bytes(v).decode())
 
   def receive(self):
     self.central.on_notify(self._on_rx)
@@ -80,7 +81,7 @@ class BluetoothManager():
     if self.central.is_connected():
       print("TX", v)
       self.central.write(v, self.with_response)
-      sleep(1 if with_response else 0)
+      sleep(1 if self.with_response else 0)
 
   def checkAcknowledge(self, nbTry=3):
     count = 0
