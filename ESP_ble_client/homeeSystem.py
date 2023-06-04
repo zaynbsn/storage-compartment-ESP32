@@ -1,4 +1,4 @@
-from systemStates import *
+from securityStates import *
 from ble.bleStates import *
 from leds.ledStates import *
 
@@ -8,40 +8,45 @@ from accelerometer.accelerometer import Accel
 from ble.bleClientManager import BluetoothManager
 from leds.ledsManager import LedsManager
 from leds.led import *
-from systemStates import *
 from alertDelegate import *
 from libs.hcsr04 import *
 from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
+from systemStates import *
 from neopixel import NeoPixel
+from time import sleep_ms
 
 class HomeeSystem:
-    def __init__(self, state, ledManager, sensorManager, accel):
+    def __init__(self, state, securityState, ledManager, sensorManager, accel):
         self.state = state
+        self.securityState = securityState
+
         self.ledManager = ledManager
         self.sensorManager = sensorManager
         self.accel = accel
         self.ble = None
+
         self.cooldown = 0
         self.decodedStr = ''
 
     def updateState(self, newState):
         self.state = newState
+    
+    def updateSecurityState(self, newState):
+        self.securityState = newState
 
     def checkSystemState(self, ble=False, sensor=False):
-        # print("checking system state")
-        ### check everything ###
-        self.updateState(SystemOKState())
+        self.updateSecurityState(SystemOKState())
 
         if ble and self.ble:
             bleState = self.ble.getState()
             if type(bleState) != BLEIsReadyState:
-                self.updateState(SystemNotOKState())
+                self.updateSecurityState(SystemNotOKState())
 
         if sensor and self.sensorManager:
             sensorState = self.sensorManager.getState()
             if type(sensorState) == NoValueState:
-                self.updateState(SystemNotOKState())
+                self.updateSecurityState(SystemNotOKState())
 
     def decodeString(self, str):
         self.decodedStr = str.split("||")
@@ -76,18 +81,41 @@ class HomeeSystem:
             self.ble.disconnect()
             self.stop()
 
+    def sendSystemState(self, value):
+        count = 0
+        while not self.ble.is_connected():
+            if count >= 3:
+                print('no connexion to check ack')
+                self.updateState(BLENotConnectedState())
+                return
+            print('waiting connexion to send SystemState :', value)
+            count += 1
+            sleep(1)
+        self.ble.send(value)
+
+    def accelFirst(self):
+        self.updateState(EntryState())
+        print('SHAKING')
+        self.ble.connect()
+        self.sendSystemState('Entry')
+
+    def sensorFirst(self):
+        self.updateState(ExitState())
+        self.ble.connect()
+        self.sendSystemState('Exit')
+
+    def checkSensors(self):
+        self.sensorManager.estimateDistance()
+        if type(self.sensorManager.currentState) == NearState:
+            self.sensorFirst()
+        elif Accel.shaking(self.accel):
+            self.accelFirst()
+
     def run(self):
         if self.ble.is_connected():
             self.launchCooldown()
         else:
-            self.sensorManager.estimateDistance()
-            if type(self.sensorManager.currentState) == NearState:
-                # change state to Entry
-                self.ble.connect()
-            elif Accel.shaking(self.accel):
-                # change state to Exit
-                print('SHAKING')
-                self.ble.connect()
+            self.checkSensors()
         self.checkSystemState(sensor=True)
 
     def stop(self):
@@ -106,17 +134,20 @@ class HomeeSystem:
 
         ############# ledsStrip ##############
         ledStrip = NeoPixel(Pin(23), 12)
-        led1 = Led()
-        led2 = Led()
-        led3 = Led()
+        led1 = Led([0, 1, 2])
+        led2 = Led([4, 5, 6, 7])
+        led3 = Led([9, 10, 11])
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
+        from leds.pulse import Pulse
+        
+        Pulse.animate(ledsStrip=ledStrip, pixels=[led1.pixels, led2.pixels], duration=2)
 
         ############## BLE ##############
         
         ble = BluetoothManager(BLEAlertManager())
 
-        homee = HomeeSystem(state=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
+        homee = HomeeSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
         homee.ble = ble
 
         return homee

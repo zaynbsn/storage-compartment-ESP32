@@ -3,7 +3,8 @@ from leds.ledStates import *
 from time import sleep
 
 class Led:
-    def __init__(self):
+    def __init__(self, pixels):
+        self.pixels = pixels
         self.currentState = InitialState()
         self.currentState.context = self
 

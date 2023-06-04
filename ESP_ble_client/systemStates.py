@@ -2,10 +2,14 @@ class SystemStates:
   def __init__(self):
     pass
 
-class SystemOKState(SystemStates):
+class ReadSensorState(SystemStates):
   def __init__(self):
     pass
 
-class SystemNotOKState(SystemStates):
+class EntryState(SystemStates):
+  def __init__(self):
+    pass
+
+class ExitState(SystemStates):
   def __init__(self):
     pass
