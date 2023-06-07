@@ -1,11 +1,10 @@
 from machine import Pin, SoftI2C, PWM
 from leds.ledStates import *
-from time import sleep
 
 class Led:
-    def __init__(self, led):
-        self.led = led
-        self.currentState = InitialState()
+    def __init__(self, pixels):
+        self.pixels = pixels
+        self.currentState = LedInitialState()
         self.currentState.context = self
 
     def updateState(self, newState):

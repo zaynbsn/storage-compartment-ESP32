@@ -1,6 +1,7 @@
 from slots.slotStates import *
 from rfids.rfidStates import *
 from leds.ledStates import *
+from systemStates import *
 
 class Slot:
     def __init__(self, rfid, badgeId, led):
@@ -24,12 +25,26 @@ class Slot:
         else:
             self.updateState(HereNOKState())
 
-    def updateLedState(self):
-        if type(self.currentState) == NotHereState:
-            self.led.updateState(RedState())
+    def updateLedState(self, homeeState):
+        if type(homeeState) == ExitState:
+            if type(self.currentState) == NotHereState:
+                self.led.updateState(LedInitialState())
 
-        elif type(self.currentState) == HereOKState:
-            self.led.updateState(GreenState())
+            elif type(self.currentState) == HereOKState:
+                self.led.updateState(WhitePulseState())
 
-        elif type(self.currentState) == HereNOKState:
-            self.led.updateState(BlueState())
+            elif type(self.currentState) == HereNOKState:
+                self.led.updateState(RedPulseState())
+
+        elif type(homeeState) == EntryState:
+            print('helo')
+            if type(self.currentState) == NotHereState:
+                self.led.updateState(WhitePulseState())
+
+            elif type(self.currentState) == HereOKState:
+                self.led.updateState(LedInitialState())
+
+            elif type(self.currentState) == HereNOKState:
+                self.led.updateState(RedState())
+        else:
+            return

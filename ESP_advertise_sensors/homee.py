@@ -14,6 +14,11 @@ from leds.ledsManager import LedsManager
 
 from ble.wireless_manager import *
 
+from systemStates import *
+
+from time import sleep_ms
+
+
 class Homee:
     def __init__(self, slotManager, rfidManager, ledManager, wirelessManager):
         self.slotManager = slotManager
@@ -21,6 +26,14 @@ class Homee:
         self.ledManager = ledManager
         self.wirelessManager = wirelessManager
         self.strToSend = ''
+        self.previousStrSent = ''
+
+        self.state = SystemInitialState()
+
+    def updateState(self, newState):
+        if type(newState) != type(self.state):
+            self.state = newState
+            print("New State: ", self.state)
 
     def readAllBoards(self):
         self.rfidManager.readAllBoards()
@@ -29,7 +42,7 @@ class Homee:
         self.slotManager.updateSlotsStates()    
 
     def updateLedState(self):
-        self.slotManager.updateLedsStates()
+        self.slotManager.updateLedsStates(self.state)
 
     def changeLedsColors(self):
         self.ledManager.changeLedsColors()
@@ -44,25 +57,26 @@ class Homee:
         slotsStates = self.slotManager.getSlotsStates()
         for i in range(len(slotsStates)):
             if slotsStates[i] == NotHereState:
-                slotsStates[i] = 1
+                slotsStates[i] = 0
             elif slotsStates[i] == HereOKState:
-                slotsStates[i] = 0
+                slotsStates[i] = 1
             elif slotsStates[i] == HereNOKState:
-                slotsStates[i] = 0
+                slotsStates[i] = 1
             else:
                 slotsStates[i] = -1
 
-        if slotsStates == [1,1,1]:
-            self.strToSend = 'good'
-        else:
-            self.strToSend = 'bad'
-        # self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
+        self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
+
 
     def sendToBle(self):
         self.getStrToSend()
-        self.wirelessManager.sendDataToBLE(self.strToSend)
+        if self.strToSend != self.previousStrSent:
+            self.wirelessManager.sendDataToBLE(self.strToSend)
+            self.previousStrSent = self.strToSend
+            print(self.strToSend)
 
     def run(self):
+        self.updateState(self.wirelessManager.receivedState)
         self.readAllBoards()
         self.updateSlotState()
         # send ble
@@ -85,6 +99,15 @@ class Homee:
                 print("received: " + bytes(value).decode())
                 if bytes(value).decode() == 'ACK':
                     self.wirelessManager.sendDataToBLE('ACK')
+                    sleep_ms(500)
+
+                if bytes(value).decode() == 'Entry':
+                    self.wirelessManager.receivedState = EntryState()
+                elif bytes(value).decode() == 'Exit':
+                    self.wirelessManager.receivedState = ExitState()
+                else:
+                    self.wirelessManager.receivedState = SystemInitialState()
+
 
         wirelessManager = WirelessManager(bleCallback=BLECallback())
 
@@ -101,9 +124,9 @@ class Homee:
         rfidManager = RfidManager( { 'board1': board1, 'board2': board2, 'board3': board3 } )
 
         ledStrip = NeoPixel(Pin(13), 12)
-        led1 = Led([1, 2])
-        led2 = Led([5, 6])
-        led3 = Led([9, 10])
+        led1 = Led([0, 1, 2])
+        led2 = Led([4, 5, 6, 7])
+        led3 = Led([9, 10, 11])
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
 

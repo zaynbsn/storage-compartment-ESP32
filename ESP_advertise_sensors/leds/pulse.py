@@ -1,0 +1,27 @@
+from time import sleep_ms
+
+class Pulse:
+  @staticmethod
+  def pulseColor(i, ledsStrip, pixels, color='white'):
+    for slot in pixels:
+      if slot['color'] == 'white':
+        for pixel in slot['pixels']:
+          ledsStrip[pixel] = (i, i, i)
+      else:
+        for pixel in slot['pixels']:
+          ledsStrip[pixel] = (i, 0, 0)
+
+    ledsStrip.write()
+    sleep_ms(5)
+
+  @staticmethod
+  def animate(ledsStrip, pixels, duration):
+    while duration > 0:
+        for i in range(0, 200):
+          Pulse.pulseColor(i=i, ledsStrip=ledsStrip, pixels=pixels)
+        
+        for j in range(200, 0, -1):
+          Pulse.pulseColor(i=j, ledsStrip=ledsStrip, pixels=pixels)
+
+        sleep_ms(250)
+        duration -= 1

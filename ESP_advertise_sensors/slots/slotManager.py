@@ -6,9 +6,9 @@ class SlotManager:
         for slot in self.slots:
             self.slots[slot].checkState()
 
-    def updateLedsStates(self):
+    def updateLedsStates(self, homeeState):
         for slot in self.slots:
-            self.slots[slot].updateLedState()
+            self.slots[slot].updateLedState(homeeState)
 
     def turnOnLeds(self):
         for slot in self.slots:

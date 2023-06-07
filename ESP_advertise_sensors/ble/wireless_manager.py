@@ -1,3 +1,4 @@
+from systemStates import *
 class CommunicationCallback:
     def __init__(self):
         pass
@@ -17,6 +18,8 @@ class WirelessManager:
         self.bleCallback = bleCallback
         self.bleCallback.wirelessManager = self
         self.wsCallback = wsCallback
+
+        self.receivedState = SystemInitialState()
         
         if self.bleCallback != None:
             from ble.ble_simple_peripheral import bluetooth, BLESimplePeripheral
