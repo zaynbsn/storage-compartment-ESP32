@@ -50,17 +50,27 @@ class HomeeSystem:
 
     def decodeString(self, str):
         self.decodedStr = str.split("||")
-        self.decodedStr = [1, 1, 0] 
-        for i in range(len(self.decodedStr)):
-            state = int(self.decodedStr[i])
-            if state == 0:
+        print(self.decodedStr)
+        if type(self.state) == EntryState:
+            self.ledManager.turnOffLeds()
+            return
+
+        if self.decodedStr == ['0', '0', '0']:
+            for i in range(len(self.decodedStr)):
+                state = int(self.decodedStr[i])
+                self.decodedStr[i] = LedInitialState()
+
+        elif self.decodedStr == ['1', '1', '1']:
+            for i in range(len(self.decodedStr)):
+                state = int(self.decodedStr[i])
                 self.decodedStr[i] = RedState()
-            elif state == 1:
-                self.decodedStr[i] = WhiteState()
-            elif state == 2:
-                self.decodedStr[i] = BlueState()
-            else:
-                self.decodedStr[i] = InitialState()
+        else:
+            for i in range(len(self.decodedStr)):
+                state = int(self.decodedStr[i])
+                if state == 0:
+                    self.decodedStr[i] = LedInitialState()
+                elif state == 1:
+                    self.decodedStr[i] = WhitePulseState()
 
         self.updateLedsStates()
         self.turnOnLeds()
@@ -80,6 +90,7 @@ class HomeeSystem:
             self.cooldown = 0
             self.ble.disconnect()
             self.stop()
+        
 
     def sendSystemState(self, value):
         count = 0
@@ -114,6 +125,7 @@ class HomeeSystem:
     def run(self):
         if self.ble.is_connected():
             self.launchCooldown()
+            self.ledManager.run()
         else:
             self.checkSensors()
         self.checkSystemState(sensor=True)
@@ -139,15 +151,13 @@ class HomeeSystem:
         led3 = Led([9, 10, 11])
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
-        from leds.pulse import Pulse
         
-        Pulse.animate(ledsStrip=ledStrip, pixels=[led1.pixels, led2.pixels], duration=2)
-
         ############## BLE ##############
         
         ble = BluetoothManager(BLEAlertManager())
 
         homee = HomeeSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
         homee.ble = ble
+        ble.homee = homee
 
         return homee

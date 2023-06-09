@@ -65,12 +65,12 @@ class Homee:
             else:
                 slotsStates[i] = -1
 
-        self.strToSend = str(slotsStates[0]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[2])
+        self.strToSend = str(slotsStates[2]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[0])
 
 
-    def sendToBle(self):
+    def sendToBle(self, bypass=False):
         self.getStrToSend()
-        if self.strToSend != self.previousStrSent:
+        if self.strToSend != self.previousStrSent or bypass:
             self.wirelessManager.sendDataToBLE(self.strToSend)
             self.previousStrSent = self.strToSend
             print(self.strToSend)
@@ -103,8 +103,10 @@ class Homee:
 
                 if bytes(value).decode() == 'Entry':
                     self.wirelessManager.receivedState = EntryState()
+                    
                 elif bytes(value).decode() == 'Exit':
                     self.wirelessManager.receivedState = ExitState()
+                    self.wirelessManager.homee.sendToBle(bypass=True)
                 else:
                     self.wirelessManager.receivedState = SystemInitialState()
 
@@ -135,4 +137,6 @@ class Homee:
         slot3 = Slot(rfid=board3, badgeId='0x63d858ac', led=led3)
         slotManager = SlotManager( { 'slot1': slot1, 'slot2': slot2, 'slot3': slot3 } )
 
-        return Homee(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager)
+        homee =  Homee(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager)
+        wirelessManager.homee = homee
+        return homee

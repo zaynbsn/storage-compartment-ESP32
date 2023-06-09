@@ -4,7 +4,7 @@ class LedStatesProtocol:
 
     def getRGB(self):
         pass
-class InitialState(LedStatesProtocol):
+class LedInitialState(LedStatesProtocol):
     def __init__(self):
         pass
 
@@ -22,13 +22,13 @@ class RedState(LedStatesProtocol):
 
     def getRGB(self):
         return (255, 0, 0)
-class WhiteWaveState(LedStatesProtocol):
+class WhitePulseState(LedStatesProtocol):
     def __init__(self):
         pass
 
     def getRGB(self):
         return (255, 255, 255)
-class RedWaveState(LedStatesProtocol):
+class RedPulseState(LedStatesProtocol):
     def __init__(self):
         pass
 

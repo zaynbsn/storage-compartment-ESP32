@@ -16,6 +16,15 @@ class Pulse:
 
   @staticmethod
   def animate(ledsStrip, pixels, duration):
+    '''
+    @params : {
+      pixels: {
+        {color : 'red', pixels: [0, 1, 2] }, 
+        {color : 'white', pixels: [3, 4, 5, 6] }
+      }
+    }
+    }
+    '''
     while duration > 0:
         for i in range(0, 200):
           Pulse.pulseColor(i=i, ledsStrip=ledsStrip, pixels=pixels)

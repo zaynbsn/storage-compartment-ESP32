@@ -18,6 +18,7 @@ class WirelessManager:
         self.bleCallback = bleCallback
         self.bleCallback.wirelessManager = self
         self.wsCallback = wsCallback
+        self.homee = None
 
         self.receivedState = SystemInitialState()
         
