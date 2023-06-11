@@ -1,7 +1,3 @@
-from time import sleep_ms
-from machine import Pin, SPI
-from libs.mfrc522 import MFRC522
-
 class RfidManager:
     def __init__(self, boards):
         """

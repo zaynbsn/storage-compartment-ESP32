@@ -12,7 +12,7 @@ class Pulse:
           ledsStrip[pixel] = (i, 0, 0)
 
     ledsStrip.write()
-    sleep_ms(10)
+    sleep_ms(5)
 
   @staticmethod
   def animate(ledsStrip, pixels, duration):
@@ -32,5 +32,5 @@ class Pulse:
         for j in range(200, 0, -1):
           Pulse.pulseColor(i=j, ledsStrip=ledsStrip, pixels=pixels)
 
-        sleep_ms(250)
+        # sleep_ms(250)
         duration -= 1

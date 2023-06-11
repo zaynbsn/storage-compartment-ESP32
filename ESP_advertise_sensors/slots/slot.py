@@ -25,8 +25,8 @@ class Slot:
         else:
             self.updateState(HereNOKState())
 
-    def updateLedState(self, homeeState):
-        if type(homeeState) == ExitState:
+    def updateLedState(self, omiState):
+        if type(omiState) == ExitState:
             if type(self.currentState) == NotHereState:
                 self.led.updateState(LedInitialState())
 
@@ -36,7 +36,7 @@ class Slot:
             elif type(self.currentState) == HereNOKState:
                 self.led.updateState(RedState())
 
-        elif type(homeeState) == EntryState:
+        elif type(omiState) == EntryState:
             if type(self.currentState) == NotHereState:
                 self.led.updateState(WhitePulseState())
 

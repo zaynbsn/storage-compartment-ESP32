@@ -1,19 +1,19 @@
 from securityStates import *
-from homeeSystem import HomeeSystem
+from omiSystem import OmiSystem
 from time import sleep_ms
 from tests.checkList import *
 
-homee = HomeeSystem.setup()
-#CheckInitialState().runAllTests(ledManager=homee.ledManager)
+omi = OmiSystem.setup()
+#CheckInitialState().runAllTests(ledManager=omi.ledManager)
 
 while True:
   try:
-    if type(homee.securityState) == SystemOKState:
-      homee.run()
+    if type(omi.securityState) == SystemOKState:
+      omi.run()
       sleep_ms(250)
     else:
       break
 
   except KeyboardInterrupt:
-    homee.stop()
+    omi.stop()
     raise

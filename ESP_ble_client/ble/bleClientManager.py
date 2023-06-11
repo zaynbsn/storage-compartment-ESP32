@@ -7,10 +7,10 @@ class BluetoothManager():
   
   stateEmitingAlert = [BLENotConnectedState, BLEAckFailedState]
 
-  def __init__(self, alertDelegate, homee=None):
+  def __init__(self, alertDelegate, omi=None):
     self.ble = bluetooth.BLE()
     self.central = BLESimpleCentral(self.ble)
-    self.homee = homee
+    self.omi = omi
     self.not_found = False
     self.with_response = False
     self.alertDelegate = alertDelegate
@@ -29,7 +29,7 @@ class BluetoothManager():
   def _on_scan(self, addr_type, addr, name):
     if addr_type is not None:
       print("Found peripheral:", addr_type, addr, name)
-      if name == "homee":
+      if name == "omi":
           self.central.connect()
           self.updateState(BLEConnectedState())
           print('Connected')
@@ -70,9 +70,9 @@ class BluetoothManager():
       else:
         self.updateState(BLEAckFailedState())
     else:
-      if self.homee:
+      if self.omi:
         print('helo in _on_rx')
-        self.homee.decodeString(bytes(v).decode())
+        self.omi.decodeString(bytes(v).decode())
 
   def receive(self):
     self.central.on_notify(self._on_rx)

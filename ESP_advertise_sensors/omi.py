@@ -19,7 +19,7 @@ from systemStates import *
 from time import sleep_ms
 
 
-class Homee:
+class Omi:
     def __init__(self, slotManager, rfidManager, ledManager, wirelessManager):
         self.slotManager = slotManager
         self.rfidManager = rfidManager
@@ -73,16 +73,18 @@ class Homee:
         if self.strToSend != self.previousStrSent or bypass:
             self.wirelessManager.sendDataToBLE(self.strToSend)
             self.previousStrSent = self.strToSend
-            print(self.strToSend)
+            print('strToSend', self.strToSend)
 
     def run(self):
         self.updateState(self.wirelessManager.receivedState)
+        if type(self.state) == SystemInitialState:
+            return
         self.readAllBoards()
         self.updateSlotState()
-        # send ble
-        self.sendToBle()
         self.updateLedState()
         self.changeLedsColors()
+        # send ble
+        self.sendToBle()
         self.turnOnLeds()
 
     def stop(self):
@@ -91,7 +93,7 @@ class Homee:
     @staticmethod
     def defaultConfig():
         class BLECallback(CommunicationCallback):
-            def __init__(self, bleName='homee'):
+            def __init__(self, bleName='omi'):
                 self.wirelessManager = None
                 self.bleName = bleName
 
@@ -99,14 +101,12 @@ class Homee:
                 print("received: " + bytes(value).decode())
                 if bytes(value).decode() == 'ACK':
                     self.wirelessManager.sendDataToBLE('ACK')
-                    sleep_ms(500)
+                    # sleep_ms(500)
 
                 if bytes(value).decode() == 'Entry':
                     self.wirelessManager.receivedState = EntryState()
-                    
                 elif bytes(value).decode() == 'Exit':
                     self.wirelessManager.receivedState = ExitState()
-                    self.wirelessManager.homee.sendToBle(bypass=True)
                 else:
                     self.wirelessManager.receivedState = SystemInitialState()
 
@@ -137,6 +137,6 @@ class Homee:
         slot3 = Slot(rfid=board3, badgeId='0x63d858ac', led=led3)
         slotManager = SlotManager( { 'slot1': slot1, 'slot2': slot2, 'slot3': slot3 } )
 
-        homee =  Homee(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager)
-        wirelessManager.homee = homee
-        return homee
+        omi =  Omi(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager)
+        wirelessManager.omi = omi
+        return omi

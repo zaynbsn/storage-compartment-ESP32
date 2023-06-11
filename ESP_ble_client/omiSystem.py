@@ -16,7 +16,7 @@ from systemStates import *
 from neopixel import NeoPixel
 from time import sleep_ms
 
-class HomeeSystem:
+class OmiSystem:
     def __init__(self, state, securityState, ledManager, sensorManager, accel):
         self.state = state
         self.securityState = securityState
@@ -156,8 +156,8 @@ class HomeeSystem:
         
         ble = BluetoothManager(BLEAlertManager())
 
-        homee = HomeeSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
-        homee.ble = ble
-        ble.homee = homee
+        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
+        omi.ble = ble
+        ble.omi = omi
 
-        return homee
+        return omi

@@ -1,18 +1,18 @@
 from time import sleep_ms
 from exemples.read import *
-from homee import Homee
+from omi import Omi
 from tests.checkList import *
 
-homee = Homee.defaultConfig()
+omi = Omi.defaultConfig()
 
-# CheckInitialState().runAllTests(ledManager=homee.ledManager, rfids=homee.rfidManager.boards)
+# CheckInitialState().runAllTests(ledManager=omi.ledManager, rfids=omi.rfidManager.boards)
 
 try: 
     while True:
-        if homee.wirelessManager.isConnected():
-            homee.run()
+        if omi.wirelessManager.isConnected():
+            omi.run()
         sleep_ms(250)
 
 except KeyboardInterrupt:
-    homee.stop()
+    omi.stop()
     print('Bye')

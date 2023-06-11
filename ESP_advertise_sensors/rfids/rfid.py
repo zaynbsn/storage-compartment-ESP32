@@ -27,7 +27,6 @@ class Rfid:
             if stat == self.reader.OK:
                 uid = ("0x%02x%02x%02x%02x" % (raw_uid[0], raw_uid[1], raw_uid[2], raw_uid[3]))
                 print(self.rid, uid)
-                sleep_ms(100)
                 self.badgeId = uid 
                 self.updateState(ReadState())
         else:

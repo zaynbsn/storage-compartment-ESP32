@@ -2,7 +2,7 @@ from time import sleep_ms
 
 class Pulse:
   @staticmethod
-  def pulseColor(i, ledsStrip, pixels, color='white'):
+  def pulseColor(i, ledsStrip, pixels):
     for slot in pixels:
       if slot['color'] == 'white':
         for pixel in slot['pixels']:
@@ -32,5 +32,4 @@ class Pulse:
         for j in range(200, 0, -1):
           Pulse.pulseColor(i=j, ledsStrip=ledsStrip, pixels=pixels)
 
-        sleep_ms(250)
         duration -= 1
