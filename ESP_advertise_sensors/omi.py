@@ -82,9 +82,9 @@ class Omi:
         self.readAllBoards()
         self.updateSlotState()
         self.updateLedState()
-        self.changeLedsColors()
         # send ble
-        self.sendToBle()
+        self.sendToBle(bypass=True)
+        self.changeLedsColors()
         self.turnOnLeds()
 
     def stop(self):

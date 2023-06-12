@@ -125,7 +125,7 @@ class OmiSystem:
     def run(self):
         if self.ble.is_connected():
             self.launchCooldown()
-            self.ledManager.run()
+            # self.ledManager.run()
         else:
             self.checkSensors()
         self.checkSystemState(sensor=True)

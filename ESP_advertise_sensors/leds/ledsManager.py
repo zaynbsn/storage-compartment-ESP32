@@ -48,7 +48,7 @@ class LedsManager:
         if len(pixels) > 0:
             # ledThread = Thread(target=Pulse.animate, args=(self.ledStrip, pixels, 1))
             # ledThread.start()
-            Pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=5)
+            Pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
 
     def turnOnLeds(self):
         self.ledStrip.write()
