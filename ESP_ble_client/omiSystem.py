@@ -16,17 +16,19 @@ from button.buttonManager import *
 from systemStates import *
 from neopixel import NeoPixel
 from time import sleep_ms
+from machine import Timer
+
 
 class OmiSystem:
-    def __init__(self, state, securityState, ledManager, sensorManager, accel, buttonManager):
+    def __init__(self, state, securityState, ledManager, sensorManager, accel):
         self.state = state
         self.securityState = securityState
 
         self.ledManager = ledManager
         self.sensorManager = sensorManager
         self.accel = accel
-        self.buttonManager = buttonManager
         self.ble = None
+        self.timer = Timer(0)
 
         self.cooldown = 0
         self.decodedStr = ''
@@ -96,6 +98,7 @@ class OmiSystem:
             self.cooldown = 0
             self.ble.disconnect()
             self.stop()
+        # todo timer
         
 
     def sendSystemState(self, value):
@@ -128,21 +131,26 @@ class OmiSystem:
         elif Accel.shaking(self.accel):
             self.accelFirst()
     
-    def checkButton(self):
-        if self.buttonManager.isPressed:
-            self.ble.send("off")
-            self.ledManager.turnOffLeds
+    def checkOffSensor(self):
+        self.sensorManager.estimateDistance()
+        if type(self.sensorManager.currentState) == VeryNearState:
+            self.stop()
+            self.sensorManager.updateState(SensorNoReadState())
+            def cb(t):
+                self.sensorManager.updateState(SensorInitialState())
+            self.timer.init(mode=Timer.ONE_SHOT, period=2000, callback=cb)
 
     def run(self):
         if self.ble.is_connected():
             self.launchCooldown()
-            self.checkButton()
+            self.checkOffSensor()
             # self.ledManager.run()
         else:
             self.checkSensors()
         self.checkSystemState(sensor=True)
 
     def stop(self):
+        self.ble.send("off")
         self.ledManager.turnOffLeds()
         self.ble.disconnect()
 
@@ -163,15 +171,12 @@ class OmiSystem:
         led3 = Led([9, 10, 11])
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
-        
-        ############# BUTTON #############
-        button = Pin(13, Pin.IN)
-        buttonManager = ButtonManager(button)
+
         ############# BLE ##############
         
         ble = BluetoothManager(BLEAlertManager())
 
-        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu, buttonManager=buttonManager)
+        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
         omi.ble = ble
         ble.omi = omi
 

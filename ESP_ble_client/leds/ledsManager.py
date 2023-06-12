@@ -6,6 +6,7 @@ class LedsManager:
         self.ledStrip = ledStrip
         self.leds = leds
         self.rgbs = [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+        self.pulse = Pulse()
         self.turnOffLeds()
 
     def getRGBs(self):
@@ -45,7 +46,7 @@ class LedsManager:
         print(pixels)
 
         if len(pixels) > 0:
-            Pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
+            self.pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
 
     def turnOnLeds(self):
         self.ledStrip.write()
