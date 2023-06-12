@@ -1,5 +1,6 @@
 from leds.ledStates import *
-from leds.pulse import Pulse
+from pulse.pulse import Pulse
+from pulse.pulseStates import *
 # from libs.threading import Thread
 
 class LedsManager:
@@ -7,6 +8,7 @@ class LedsManager:
         self.ledStrip = ledStrip
         self.leds = leds
         self.rgbs = [(0, 0, 0), (0, 0, 0), (0, 0, 0)]
+        self.pulse = Pulse()
         self.turnOffLeds()
 
     def getRGBs(self):  
@@ -31,24 +33,25 @@ class LedsManager:
         self.ledStrip[10] = self.rgbs[2]
         self.ledStrip[11] = self.rgbs[2]
 
-        pixels = []
-        for led in self.leds:
-            if type(led.currentState) == WhitePulseState:
-                slot = {}
-                slot['color'] = 'white'
-                slot['pixels'] = led.pixels
-                pixels.append(slot)
-            elif type(led.currentState) == RedPulseState:
-                slot = {}
-                slot['color'] = 'red'
-                slot['pixels'] = led.pixels
-                pixels.append(slot)
-        print(pixels)
+        if type(self.pulse.currentState) == PulseInitialState:
+            pixels = []
+            for led in self.leds:
+                if type(led.currentState) == WhitePulseState:
+                    slot = {}
+                    slot['color'] = 'white'
+                    slot['pixels'] = led.pixels
+                    pixels.append(slot)
+                elif type(led.currentState) == RedPulseState:
+                    slot = {}
+                    slot['color'] = 'red'
+                    slot['pixels'] = led.pixels
+                    pixels.append(slot)
+            print(pixels)
 
-        if len(pixels) > 0:
-            # ledThread = Thread(target=Pulse.animate, args=(self.ledStrip, pixels, 1))
-            # ledThread.start()
-            Pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
+            if len(pixels) > 0:
+                # ledThread = Thread(target=Pulse.animate, args=(self.ledStrip, pixels, 1))
+                # ledThread.start()
+                self.pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
 
     def turnOnLeds(self):
         self.ledStrip.write()

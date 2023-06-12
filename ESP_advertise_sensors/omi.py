@@ -66,6 +66,7 @@ class Omi:
                 slotsStates[i] = -1
 
         self.strToSend = str(slotsStates[2]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[0])
+        # todo gestion dans wirelessManager
 
 
     def sendToBle(self, bypass=False):
@@ -74,6 +75,7 @@ class Omi:
             self.wirelessManager.sendDataToBLE(self.strToSend)
             self.previousStrSent = self.strToSend
             print('strToSend', self.strToSend)
+            # todo gestion dans wirelessManager
 
     def run(self):
         self.updateState(self.wirelessManager.receivedState)
@@ -83,7 +85,7 @@ class Omi:
         self.updateSlotState()
         self.updateLedState()
         # send ble
-        self.sendToBle(bypass=True)
+        self.sendToBle()
         self.changeLedsColors()
         self.turnOnLeds()
 
@@ -101,7 +103,6 @@ class Omi:
                 print("received: " + bytes(value).decode())
                 if bytes(value).decode() == 'ACK':
                     self.wirelessManager.sendDataToBLE('ACK')
-                    # sleep_ms(500)
 
                 if bytes(value).decode() == 'Entry':
                     self.wirelessManager.receivedState = EntryState()
