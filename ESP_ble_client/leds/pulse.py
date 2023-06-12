@@ -1,3 +1,5 @@
+from time import sleep_ms
+
 class Pulse:
   @staticmethod
   def pulseColor(i, ledsStrip, pixels, color='white'):

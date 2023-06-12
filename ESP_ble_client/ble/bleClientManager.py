@@ -71,7 +71,6 @@ class BluetoothManager():
         self.updateState(BLEAckFailedState())
     else:
       if self.omi:
-        print('helo in _on_rx')
         self.omi.decodeString(bytes(v).decode())
 
   def receive(self):

@@ -12,18 +12,20 @@ from alertDelegate import *
 from libs.hcsr04 import *
 from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
+from button.buttonManager import *
 from systemStates import *
 from neopixel import NeoPixel
 from time import sleep_ms
 
 class OmiSystem:
-    def __init__(self, state, securityState, ledManager, sensorManager, accel):
+    def __init__(self, state, securityState, ledManager, sensorManager, accel, buttonManager):
         self.state = state
         self.securityState = securityState
 
         self.ledManager = ledManager
         self.sensorManager = sensorManager
         self.accel = accel
+        self.buttonManager = buttonManager
         self.ble = None
 
         self.cooldown = 0
@@ -49,6 +51,10 @@ class OmiSystem:
                 self.updateSecurityState(SystemNotOKState())
 
     def decodeString(self, str):
+        if str == 'off':
+            self.ledManager.turnOffLeds()
+            return
+
         self.decodedStr = str.split("||")
         print(self.decodedStr)
         if type(self.state) == EntryState:
@@ -121,10 +127,16 @@ class OmiSystem:
             self.sensorFirst()
         elif Accel.shaking(self.accel):
             self.accelFirst()
+    
+    def checkButton(self):
+        if self.buttonManager.isPressed:
+            self.ble.send("off")
+            self.ledManager.turnOffLeds
 
     def run(self):
         if self.ble.is_connected():
             self.launchCooldown()
+            self.checkButton()
             # self.ledManager.run()
         else:
             self.checkSensors()
@@ -152,11 +164,14 @@ class OmiSystem:
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
         
-        ############## BLE ##############
+        ############# BUTTON #############
+        button = Pin(13, Pin.IN)
+        buttonManager = ButtonManager(button)
+        ############# BLE ##############
         
         ble = BluetoothManager(BLEAlertManager())
 
-        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
+        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu, buttonManager=buttonManager)
         omi.ble = ble
         ble.omi = omi
 
