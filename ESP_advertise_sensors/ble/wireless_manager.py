@@ -25,7 +25,7 @@ class WirelessManager:
         if self.bleCallback != None:
             from ble.ble_simple_peripheral import bluetooth, BLESimplePeripheral
             self.ble = bluetooth.BLE()
-            self.blePeripheral = BLESimplePeripheral(self.ble, name=self.bleCallback.bleName)
+            self.blePeripheral = BLESimplePeripheral(self.ble, name=self.bleCallback.bleName, wirelessManager=self)
             self.blePeripheral.on_write(self.bleCallback.didReceiveCallback)
 
     def isConnected(self):

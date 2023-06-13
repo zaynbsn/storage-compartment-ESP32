@@ -47,3 +47,18 @@ class Slot:
                 self.led.updateState(RedState())
         else:
             return
+        
+    def warningSlot(self):
+        if type(self.currentState) == NotHereState:
+                self.led.updateState(RedPulseState())
+
+        elif type(self.currentState) == HereOKState:
+            self.led.updateState(LedInitialState())
+
+        elif type(self.currentState) == HereNOKState:
+            self.led.updateState(RedState())
+
+    def checkIfFull(self):
+        if type(self.currentState) == NotHereState:
+            return False
+        return True

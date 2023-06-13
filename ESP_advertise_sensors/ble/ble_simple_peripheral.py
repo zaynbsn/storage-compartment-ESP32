@@ -121,7 +121,7 @@ _UART_SERVICE = (
 
 
 class BLESimplePeripheral:
-    def __init__(self, ble, name="mpy-uart"):
+    def __init__(self, ble, wirelessManager, name="mpy-uart"):
         self._ble = ble
         self._ble.active(True)
         self._ble.irq(self._irq)
@@ -130,12 +130,15 @@ class BLESimplePeripheral:
         self._write_callback = None
         self._payload = advertising_payload(name=name, services=[_UART_UUID])
         self._advertise()
+        self.wirelessManager = wirelessManager
 
     def _irq(self, event, data):
         # Track connections so we can send notifications.
         if event == _IRQ_CENTRAL_CONNECT:
             conn_handle, _, _ = data
             print("New connection", conn_handle)
+            # launch cooldown on connexion
+            self.wirelessManager.omi.launchCooldown()
             self._connections.add(conn_handle)
         elif event == _IRQ_CENTRAL_DISCONNECT:
             conn_handle, _, _ = data

@@ -20,3 +20,13 @@ class SlotManager:
             slotsStates.append(type(self.slots[slot].currentState))
 
         return slotsStates
+
+    def launchWarning(self):
+        for slot in self.slots:
+            self.slots[slot].warningSlot()
+
+    def isAllSlotsFull(self):
+        for slot in self.slots:
+            if not self.slots[slot].checkIfFull():
+                return False
+        return True

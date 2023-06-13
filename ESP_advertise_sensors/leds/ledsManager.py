@@ -1,7 +1,6 @@
 from leds.ledStates import *
 from pulse.pulse import Pulse
 from pulse.pulseStates import *
-# from libs.threading import Thread
 
 class LedsManager:
     def __init__(self, ledStrip, leds):
@@ -49,8 +48,6 @@ class LedsManager:
             print(pixels)
 
             if len(pixels) > 0:
-                # ledThread = Thread(target=Pulse.animate, args=(self.ledStrip, pixels, 1))
-                # ledThread.start()
                 self.pulse.animate(ledsStrip=self.ledStrip, pixels=pixels, duration=1)
 
     def turnOnLeds(self):

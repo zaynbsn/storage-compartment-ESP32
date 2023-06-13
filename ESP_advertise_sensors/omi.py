@@ -1,4 +1,4 @@
-from machine import Pin
+from machine import Pin, Timer
 from neopixel import NeoPixel
 
 from rfids.rfid import Rfid
@@ -19,6 +19,7 @@ from systemStates import *
 from time import sleep_ms
 
 
+
 class Omi:
     def __init__(self, slotManager, rfidManager, ledManager, wirelessManager):
         self.slotManager = slotManager
@@ -27,12 +28,15 @@ class Omi:
         self.wirelessManager = wirelessManager
         self.strToSend = ''
         self.previousStrSent = ''
+        self.timer = Timer(0)
 
         self.state = SystemInitialState()
+        self.state.context = self
 
     def updateState(self, newState):
         if type(newState) != type(self.state):
             self.state = newState
+            self.state.context = self
             print("New State: ", self.state)
 
     def readAllBoards(self):
@@ -53,6 +57,29 @@ class Omi:
     def turnOffLed(self):
         self.ledManager.turnOffLeds()
 
+    def updateLedStateWarning(self):
+        self.slotManager.launchWarning()
+
+    def launchWarning(self):
+        self.slotManager.launchWarning()
+        self.updateState(WarningState())
+
+    def launchCooldown(self):
+        print('helo launchcooldown')
+        def stopCallBack(t):
+            if type(self.state) == ExitState:
+                print('helo EXITSTATE')
+                self.stop()
+            if type(self.state) == EntryState:
+                print('helo ENTRYSTATE')
+                slotsStates = self.slotManager.getSlotsStates()
+                for slotState in slotsStates:
+                    print(slotState, NotHereState)
+                    if slotState == NotHereState: 
+                        self.launchWarning()
+
+        self.timer.init(mode=Timer.ONE_SHOT, period=20000, callback=stopCallBack)
+
     def getStrToSend(self):
         slotsStates = self.slotManager.getSlotsStates()
         for i in range(len(slotsStates)):
@@ -68,7 +95,6 @@ class Omi:
         self.strToSend = str(slotsStates[2]) + "||" + str(slotsStates[1]) + "||" + str(slotsStates[0])
         # todo gestion dans wirelessManager
 
-
     def sendToBle(self, bypass=False):
         self.getStrToSend()
         if self.strToSend != self.previousStrSent or bypass:
@@ -76,21 +102,21 @@ class Omi:
             self.previousStrSent = self.strToSend
             print('strToSend', self.strToSend)
             # todo gestion dans wirelessManager
+    
+    def sendOff(self):
+        self.wirelessManager.sendDataToBLE('off')
+        print('################### OFF SENT ##################')
+
+    def isAllSlotFull(self):
+        return self.slotManager.isAllSlotsFull()
 
     def run(self):
-        self.updateState(self.wirelessManager.receivedState)
-        if type(self.state) == SystemInitialState:
-            return
-        self.readAllBoards()
-        self.updateSlotState()
-        self.updateLedState()
-        # send ble
-        self.sendToBle()
-        self.changeLedsColors()
-        self.turnOnLeds()
+        self.state.run()
 
     def stop(self):
+        self.sendOff()
         self.turnOffLed()
+        self.updateState(SystemInitialState())
 
     @staticmethod
     def defaultConfig():
