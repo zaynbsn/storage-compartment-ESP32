@@ -11,6 +11,9 @@ from slots.slotManager import SlotManager
 from leds.led import Led
 from leds.ledsManager import LedsManager
 
+from libs.hcsr04 import *
+from sensor.sensorManager import SensorManager
+from sensor.sensorStates import *
 
 from ble.wireless_manager import *
 
@@ -21,11 +24,12 @@ from time import sleep_ms
 
 
 class Omi:
-    def __init__(self, slotManager, rfidManager, ledManager, wirelessManager):
+    def __init__(self, slotManager, rfidManager, ledManager, wirelessManager, sensorManager):
         self.slotManager = slotManager
         self.rfidManager = rfidManager
         self.ledManager = ledManager
         self.wirelessManager = wirelessManager
+        self.sensorManager = sensorManager
         self.strToSend = ''
         self.previousStrSent = ''
         self.timer = Timer(0)
@@ -110,6 +114,15 @@ class Omi:
     def isAllSlotFull(self):
         return self.slotManager.isAllSlotsFull()
 
+    def isAllSlotEmpty(self):
+        return self.slotManager.isAllSlotEmpty()
+    
+    def checkOffSensor(self):
+        print('checkOffSensor')
+        self.sensorManager.estimateDistance()
+        if type(self.sensorManager.currentState) == VeryNearState:
+            self.stop()
+
     def run(self):
         self.state.run()
 
@@ -129,7 +142,8 @@ class Omi:
                 print("received: " + bytes(value).decode())
                 if bytes(value).decode() == 'ACK':
                     self.wirelessManager.sendDataToBLE('ACK')
-
+                if bytes(value).decode() == 'off':
+                    self.wirelessManager.omi.stop()
                 if bytes(value).decode() == 'Entry':
                     self.wirelessManager.receivedState = EntryState()
                 elif bytes(value).decode() == 'Exit':
@@ -147,11 +161,17 @@ class Omi:
         sda2 = Pin(17, Pin.OUT)
         sda3 = Pin(16, Pin.OUT)
 
+        ############# rfids ##############
         board1 = Rfid(rid='board1', sda=sda, sck=sck, mosi=mosi, miso=miso)
         board2 = Rfid(rid='board2', sda=sda2, sck=sck, mosi=mosi, miso=miso)
         board3 = Rfid(rid='board3', sda=sda3, sck=sck, mosi=mosi, miso=miso)
         rfidManager = RfidManager( { 'board1': board1, 'board2': board2, 'board3': board3 } )
 
+        ############# sensor ##############
+        sensor = HCSR04(trigger_pin=14, echo_pin=12, echo_timeout_us=10000)
+        sensorManager = SensorManager(sensor)
+
+        ############# ledsStrip ##############
         ledStrip = NeoPixel(Pin(13), 12)
         led1 = Led([0, 1, 2])
         led2 = Led([4, 5, 6, 7])
@@ -159,11 +179,12 @@ class Omi:
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
 
+        ############# slots ##############
         slot1 = Slot(rfid=board1, badgeId='0x3c2356f8', led=led1)
         slot2 = Slot(rfid=board2, badgeId='0x5a5512b1', led=led2)
         slot3 = Slot(rfid=board3, badgeId='0x63d858ac', led=led3)
         slotManager = SlotManager( { 'slot1': slot1, 'slot2': slot2, 'slot3': slot3 } )
 
-        omi =  Omi(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager)
+        omi =  Omi(slotManager=slotManager, rfidManager=rfidManager, ledManager=ledManager, wirelessManager=wirelessManager, sensorManager=sensorManager)
         wirelessManager.omi = omi
         return omi
