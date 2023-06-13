@@ -1,11 +1,19 @@
 from time import sleep_ms
 from machine import Timer
+from pulse.pulseStates import *
 
 class Pulse:
   def __init__(self):
     self.timer = Timer(1)
     self.period = 5
     self.increment = True
+    self.currentState = PulseInitialState()
+
+  def updateState(self, newState):
+    if type(self.currentState) != type(newState):
+        self.currentState = newState
+        self.currentState.context = self
+        print("New State: ", self.currentState)
 
   def pulseColor(self, i, ledsStrip, pixels, exit):
     for slot in pixels:
@@ -31,6 +39,7 @@ class Pulse:
       if i == 0:
         exit = True
         self.increment = True
+        self.updateState(PulseInitialState())
       else:
         i -= 1
 
@@ -46,13 +55,8 @@ class Pulse:
     }
     '''
     while duration > 0:
+        self.updateState(PulseAnimationState())
         i=0
         self.timer.init(mode=Timer.ONE_SHOT, period=self.period, callback=lambda b:self.pulseColor(i=i, ledsStrip=ledsStrip, pixels=pixels, exit=False))
-
-        # for i in range(0, 200):
-        #   Pulse.pulseColor(i=i, ledsStrip=ledsStrip, pixels=pixels)
-
-        # for j in range(200, 0, -1):
-        #   Pulse.pulseColor(i=j, ledsStrip=ledsStrip, pixels=pixels)
 
         duration -= 1

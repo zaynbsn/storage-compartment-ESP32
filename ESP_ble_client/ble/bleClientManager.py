@@ -71,7 +71,10 @@ class BluetoothManager():
         self.updateState(BLEAckFailedState())
     else:
       if self.omi:
-        self.omi.decodeString(bytes(v).decode())
+        if  bytes(v).decode() == 'off':
+          self.omi.stop()
+        else:
+          self.omi.decodeString(bytes(v).decode())
 
   def receive(self):
     self.central.on_notify(self._on_rx)

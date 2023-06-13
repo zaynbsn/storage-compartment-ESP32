@@ -6,14 +6,15 @@ from tests.checkList import *
 omi = OmiSystem.setup()
 #CheckInitialState().runAllTests(ledManager=omi.ledManager)
 
-while True:
-  try:
-    if type(omi.securityState) == SystemOKState:
-      omi.run()
-      sleep_ms(250)
-    else:
-      break
+try:
+  while True:
 
-  except KeyboardInterrupt:
-    omi.stop()
-    raise
+    # if type(omi.securityState) == SystemOKState:
+    omi.run()
+    sleep_ms(250)
+    # else:
+    #   break
+
+except KeyboardInterrupt:
+  omi.stop()
+  print('Bye')

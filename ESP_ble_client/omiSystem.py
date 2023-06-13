@@ -12,7 +12,6 @@ from alertDelegate import *
 from libs.hcsr04 import *
 from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
-from button.buttonManager import *
 from systemStates import *
 from neopixel import NeoPixel
 from time import sleep_ms
@@ -30,7 +29,6 @@ class OmiSystem:
         self.ble = None
         self.timer = Timer(0)
 
-        self.cooldown = 0
         self.decodedStr = ''
 
     def updateState(self, newState):
@@ -90,17 +88,9 @@ class OmiSystem:
     def turnOnLeds(self):
         self.ledManager.run()
 
-    def launchCooldown(self):
-        self.checkSystemState(ble=True)
-        self.cooldown += 1
-        print(self.cooldown)
-        if self.cooldown >= 300:
-            self.cooldown = 0
-            self.ble.disconnect()
-            self.stop()
-        # todo timer
-        
-
+    def turnOffLed(self):
+        self.ledManager.turnOffLeds()
+    
     def sendSystemState(self, value):
         count = 0
         while not self.ble.is_connected():
@@ -138,20 +128,21 @@ class OmiSystem:
             self.sensorManager.updateState(SensorNoReadState())
             def cb(t):
                 self.sensorManager.updateState(SensorInitialState())
-            self.timer.init(mode=Timer.ONE_SHOT, period=2000, callback=cb)
+            self.timer.init(mode=Timer.ONE_SHOT, period=10000, callback=cb)
 
     def run(self):
         if self.ble.is_connected():
-            self.launchCooldown()
+            self.checkSystemState(ble=True)
             self.checkOffSensor()
-            # self.ledManager.run()
+            # self.updateLedsStates()
+            # self.turnOnLeds()
         else:
             self.checkSensors()
-        self.checkSystemState(sensor=True)
+        # self.checkSystemState(sensor=True)
 
     def stop(self):
-        self.ble.send("off")
-        self.ledManager.turnOffLeds()
+        self.ble.send('off')
+        self.turnOffLed()
         self.ble.disconnect()
 
     @staticmethod
