@@ -21,7 +21,7 @@ class RedState(LedStatesProtocol):
         pass
 
     def getRGB(self):
-        return (255, 0, 0)
+        return (128, 0, 128)
 class WhitePulseState(LedStatesProtocol):
     def __init__(self):
         pass

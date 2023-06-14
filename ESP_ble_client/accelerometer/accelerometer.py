@@ -1,5 +1,5 @@
 import machine
-from math import fabs
+from accelerometer.accelerometerStates import *
 
 class Accel():
     def __init__(self, i2c, addr=0x68):
@@ -8,6 +8,14 @@ class Accel():
         self.iic.start()
         self.iic.writeto(self.addr, bytearray([107, 0]))
         self.iic.stop()
+        self.currentState = AccelInitialState()
+        self.currentState.context = self
+
+    def updateState(self, newState):
+        if type(self.currentState) != type(newState):
+            self.currentState = newState
+            self.currentState.context = self
+            print("New State: ", self.currentState)
 
     def get_raw_values(self):
         self.iic.start()
@@ -54,13 +62,9 @@ class Accel():
             print(self.get_values())
             sleep(0.05)
 
-    @staticmethod
-    def shaking(mpu):
-        values = mpu.get_acc_values()
-        sumOfValues = 0
-        for i in range(0,len(values)):
-            sumOfValues += fabs(values[i])
-        return sumOfValues >= 31000
+    def shaking(self):
+        return self.currentState.shaking()
+
 
 ################             ################
 ################ use exemple ################

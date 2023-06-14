@@ -14,7 +14,7 @@ class SensorManager:
     if type(self.currentState) != type(newState):
       self.currentState = newState
       self.currentState.context = self
-      # print("New State: ", self.currentState)
+      print("New State: ", self.currentState)
 
   def __stateChecking(self):
     if self.sensor.distance_cm() >= 30 or self.sensor.distance_cm() < 0 :

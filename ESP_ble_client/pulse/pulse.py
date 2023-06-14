@@ -22,20 +22,20 @@ class Pulse:
           ledsStrip[pixel] = (i, i, i)
       else:
         for pixel in slot['pixels']:
-          ledsStrip[pixel] = (i, 0, 0)
+          ledsStrip[pixel] = (i, 0, i)
 
     ledsStrip.write()
 
     if exit:
       return
 
-    if 0 <= i <= 200 and self.increment:
-      if i == 200:
+    if 0 <= i <= 128 and self.increment:
+      if i == 128:
         self.increment = False
         i -= 1
       else:
         i += 1
-    elif 0 <= i <= 200 and not self.increment:
+    elif 0 <= i <= 128 and not self.increment:
       if i == 0:
         exit = True
         self.increment = True

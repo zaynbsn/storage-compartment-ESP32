@@ -59,4 +59,4 @@ class LedsManager:
 
     def run(self):
         self.changeLedsColors()
-        self.turnOnLeds()
+        # self.turnOnLeds()

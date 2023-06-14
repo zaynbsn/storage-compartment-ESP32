@@ -23,7 +23,6 @@ class EntryState(SystemStates):
     # send ble
     self.context.sendToBle(bypass=True)
     self.context.changeLedsColors()
-    self.context.turnOnLeds()
     if self.context.isAllSlotFull():
       self.context.stop()
     self.context.checkOffSensor()
@@ -39,8 +38,6 @@ class ExitState(SystemStates):
     # send ble
     self.context.sendToBle(bypass=True)
     self.context.changeLedsColors()
-    self.context.turnOnLeds()
-    print('isSlotEmpty', self.context.isAllSlotEmpty())
     if self.context.isAllSlotEmpty():
       self.context.stop()
     self.context.checkOffSensor()
@@ -54,7 +51,6 @@ class WarningState(SystemStates):
       self.context.updateSlotState()
       self.context.updateLedStateWarning()
       self.context.changeLedsColors()
-      print('isSlotFull', self.context.isAllSlotFull())
       if self.context.isAllSlotFull():
           self.context.stop()
       self.context.checkOffSensor()

@@ -68,21 +68,20 @@ class Omi:
         self.slotManager.launchWarning()
         self.updateState(WarningState())
 
-    def launchCooldown(self):
+    def launchCooldown(self, t=60):
+        t=t*1000
         print('helo launchcooldown')
         def stopCallBack(t):
             if type(self.state) == ExitState:
-                print('helo EXITSTATE')
                 self.stop()
             if type(self.state) == EntryState:
-                print('helo ENTRYSTATE')
                 slotsStates = self.slotManager.getSlotsStates()
                 for slotState in slotsStates:
                     print(slotState, NotHereState)
                     if slotState == NotHereState: 
                         self.launchWarning()
 
-        self.timer.init(mode=Timer.ONE_SHOT, period=20000, callback=stopCallBack)
+        self.timer.init(mode=Timer.ONE_SHOT, period=t, callback=stopCallBack)
 
     def getStrToSend(self):
         slotsStates = self.slotManager.getSlotsStates()
@@ -118,7 +117,6 @@ class Omi:
         return self.slotManager.isAllSlotEmpty()
     
     def checkOffSensor(self):
-        print('checkOffSensor')
         self.sensorManager.estimateDistance()
         if type(self.sensorManager.currentState) == VeryNearState:
             self.stop()

@@ -12,6 +12,7 @@ from alertDelegate import *
 from libs.hcsr04 import *
 from sensor.sensorManager import SensorManager
 from sensor.sensorStates import *
+from accelerometer.accelerometerStates import *
 from systemStates import *
 from neopixel import NeoPixel
 from time import sleep_ms
@@ -69,7 +70,7 @@ class OmiSystem:
         elif self.decodedStr == ['1', '1', '1']:
             for i in range(len(self.decodedStr)):
                 state = int(self.decodedStr[i])
-                self.decodedStr[i] = RedState()
+                self.decodedStr[i] = RedPulseState()
         else:
             for i in range(len(self.decodedStr)):
                 state = int(self.decodedStr[i])
@@ -118,38 +119,45 @@ class OmiSystem:
         self.sensorManager.estimateDistance()
         if type(self.sensorManager.currentState) == NearState:
             self.sensorFirst()
-        elif Accel.shaking(self.accel):
+            self.timeoutSensors(5)
+        elif self.accel.shaking():
             self.accelFirst()
+            self.timeoutSensors(5)
     
     def checkOffSensor(self):
         self.sensorManager.estimateDistance()
         if type(self.sensorManager.currentState) == VeryNearState:
             self.stop()
-            self.sensorManager.updateState(SensorNoReadState())
-            def cb(t):
-                self.sensorManager.updateState(SensorInitialState())
-            self.timer.init(mode=Timer.ONE_SHOT, period=10000, callback=cb)
+            
+    def timeoutSensors(self, t=10):
+        print('timeout sensors', t, 'seconds')
+        # t in seconds so convert to milliseconds
+        t = t*1000
+        self.sensorManager.updateState(SensorNoReadState())
+        self.accel.updateState(AccelNoReadState())
+        def cb(t):
+            self.sensorManager.updateState(SensorInitialState())
+            self.accel.updateState(AccelInitialState())
+        self.timer.init(mode=Timer.ONE_SHOT, period=t, callback=cb)
 
     def run(self):
         if self.ble.is_connected():
             self.checkSystemState(ble=True)
             self.checkOffSensor()
-            # self.updateLedsStates()
-            # self.turnOnLeds()
         else:
             self.checkSensors()
-        # self.checkSystemState(sensor=True)
 
     def stop(self):
         self.ble.send('off')
         self.turnOffLed()
         self.ble.disconnect()
+        self.timeoutSensors()
 
     @staticmethod
     def setup():
         ############# accel ##############
         i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
-        mpu = Accel(i2c)
+        accel = Accel(i2c)
 
         ############# sensor ##############
         sensor = HCSR04(trigger_pin=14, echo_pin=12, echo_timeout_us=10000)
@@ -167,7 +175,7 @@ class OmiSystem:
         
         ble = BluetoothManager(BLEAlertManager())
 
-        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=mpu)
+        omi = OmiSystem(state=ReadSensorState(), securityState=SystemOKState(), ledManager=ledManager, sensorManager=sensorManager, accel=accel)
         omi.ble = ble
         ble.omi = omi
 
