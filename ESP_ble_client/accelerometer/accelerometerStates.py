@@ -16,7 +16,8 @@ class AccelInitialState(AccelStates):
     sumOfValues = 0
     for i in range(0,len(values)):
         sumOfValues += fabs(values[i])
-    if sumOfValues >= 31000:
+    print(sumOfValues)
+    if sumOfValues >= 23500 or sumOfValues <= 22500:
         return True
     
     return False

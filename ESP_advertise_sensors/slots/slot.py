@@ -59,6 +59,6 @@ class Slot:
             self.led.updateState(RedState())
 
     def checkIfFull(self):
-        if type(self.currentState) == NotHereState:
+        if type(self.currentState) == NotHereState or type(self.currentState) == HereNOKState:
             return False
         return True

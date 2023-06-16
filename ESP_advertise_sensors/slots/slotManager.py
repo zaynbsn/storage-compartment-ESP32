@@ -30,7 +30,7 @@ class SlotManager:
             if not self.slots[slot].checkIfFull():
                 return False
         return True
-  
+
     def isAllSlotEmpty(self):
         for slot in self.slots:
             if self.slots[slot].checkIfFull():

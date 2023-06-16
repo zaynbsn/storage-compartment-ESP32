@@ -164,10 +164,10 @@ class OmiSystem:
         sensorManager = SensorManager(sensor, SensorAlertManager())
 
         ############# ledsStrip ##############
-        ledStrip = NeoPixel(Pin(23), 12)
-        led1 = Led([0, 1, 2])
-        led2 = Led([4, 5, 6, 7])
-        led3 = Led([9, 10, 11])
+        ledStrip = NeoPixel(Pin(23), 6)
+        led1 = Led([0, 1])
+        led2 = Led([2, 3])
+        led3 = Led([4, 5])
         leds = [led1, led2, led3]
         ledManager = LedsManager(ledStrip, leds)
 

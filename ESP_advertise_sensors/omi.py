@@ -112,7 +112,7 @@ class Omi:
 
     def isAllSlotFull(self):
         return self.slotManager.isAllSlotsFull()
-
+    
     def isAllSlotEmpty(self):
         return self.slotManager.isAllSlotEmpty()
     
